@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8">
     <title>JS1k 2016 - NNNN - TITLE</title>
-    <meta name="author" content="YOU">
+    <meta name="author" content="Chris Richards">
     <link rel="icon" type="image/png" href="http://js1k.com/favicon.png">
     <link rel="canonical" href="http://js1k.com/2016-elemental/demo/NNNN">
     <link rel="shortlink" href="http://js1k.com/NNNN">
@@ -124,8 +124,126 @@
     </script>
     <script type="demo">
       // THIS IS WHERE YOUR DEMO GOES
-      document.write('see console');
-      console.log('demo here', window.a, b, window.c, window.g, window.d);
+      console.log('demo', window.a, b, window.c, window.g, window.d);
+      /*
+        Pythagoras tree[edit]
+        variables : 0, 1
+        constants: [, ]
+        axiom  : 0
+        rules  : (1 → 11), (0 → 1[0]0)
+      */
+
+      // 80 bytes uglified
+      function ls(rules, source) {
+        for(var i=0, r='';
+          i < source.length &&
+          (r += rules[source[i]] || source[i])
+          ; i++){}
+        return r;
+      }
+
+      // 81 bytes uglified
+      function xls(rules, source) {
+        return source.split('').reduce(function(curr, code) {
+          return curr += rules[code] || code;
+        }, '');
+      }
+
+      // Pythagoras Tree
+      var rules = {
+        '1': '11',
+        '0': '1[0]0'
+      };
+
+      // Render an L-system string.
+      // origin {x, y, a}
+      // source '10[]'
+      function render(origin, source) {
+        var TURN = Math.PI/4; // 45 degrees
+        var position = origin;
+        var stack = [];
+        var nextPosition;
+
+        // clear the screen
+        c.fillStyle = 'white';
+        c.fillRect(0, 0, c.canvas.width, c.canvas.height);
+
+        c.strokeStyle = '#FF851B';
+        c.beginPath();
+        // start at origin
+        c.moveTo(origin.x, origin.y);
+
+        source.split('').forEach(function(code) {
+          // push position and angle. turn left 45 degrees
+          if (code === '[') {
+            stack.push(Object.assign({}, position));
+            nextPosition.a -= TURN;
+          }
+
+          // pop position and angle. turn right 45 degrees
+          if (code === ']') {
+            position = stack.pop();
+            c.moveTo(position.x, position.y);
+            position.a += TURN;
+          }
+
+          // draw a 'leaf',
+          // a line segment that doesn't advance position.
+          if (code === '0') {
+            nextPosition = calcNextPosition(position);
+            c.lineTo(nextPosition.x, nextPosition.y);
+            c.moveTo(position.x, position.y);
+          }
+
+          // draw a line segment and advance position.
+          if (code === '1') {
+            nextPosition = calcNextPosition(position);
+            position = nextPosition;
+            c.lineTo(nextPosition.x, nextPosition.y);
+          }
+        });
+
+        c.stroke();
+      }
+
+      // Calculate the next postion
+      function calcNextPosition(position) {
+        var LENGTH = 5;
+        var radian = position.a;
+
+        return {
+          x: position.x + (0|Math.cos(radian) * LENGTH),
+          y: position.y + (0|Math.sin(radian) * LENGTH),
+          a: position.a
+        };
+      }
+
+
+
+      var func = ls.bind(null, rules);
+      var axiom = '0';
+      var origin = {
+        x: c.canvas.width/2,
+        y: c.canvas.height,
+        a: 6*(Math.PI/4) //angle
+      };
+      var iter = func(axiom);
+      var draw = render.bind(null, origin);
+
+
+      var count = 0;
+      var interval = setInterval(function () {
+        draw(iter);
+        iter = func(iter);
+        count++;
+
+        if (count > 5) {
+          clearInterval(interval);
+        }
+      }, 500);
+
+
+
       // END
     </script>
     <script>

@@ -1,0 +1,15 @@
+{
+  "name": "js1k2016",
+  "version": "1.0.0",
+  "description": "js1k 2016 entry",
+  "main": "dist/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chris Richards",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^0.8.5",
+    "uglify-js": "^2.6.1"
+  }
+}
