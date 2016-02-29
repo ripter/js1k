@@ -134,10 +134,10 @@
         }, '');
       }
 
-      var axiom = 'M';
+      var axiom = '0';
       var rules = {
-        'M': 'S:C:R',
-        'S': 'M S'
+        '1': '11',
+        '0': '1[0]0'
       };
 
 
@@ -148,43 +148,27 @@
 
 
 
-      // var func = ls.bind(null, rules);
-      // var origin = {
-      //   x: c.canvas.width/2,
-      //   y: c.canvas.height,
-      //   a: 6*(Math.PI/4) //angle
-      // };
-      // var iter = func(axiom);
-      // var draw = render.bind(null, origin);
-      //
-      //
-      // var count = 0;
-      // var interval = setInterval(function () {
-      //   draw(iter);
-      //   iter = func(iter);
-      //   count++;
-      //
-      //   if (count > 5) {
-      //     clearInterval(interval);
-      //   }
-      // }, 500);
+      var func = ls.bind(null, rules);
+      var origin = {
+        x: c.canvas.width/2,
+        y: c.canvas.height,
+        a: 6*(Math.PI/4) //angle
+      };
+      var iter = func(axiom);
+      var draw = render.bind(null, origin);
 
 
-      var mobs = ['rad roach', 'mole rat', 'vicious dog'];
-      var scene = [
-        'A MOB slowly approaches.',
-        'I was able to kill the MOB'
-      ];
+      var count = 0;
+      var interval = setInterval(function () {
+        draw(iter);
+        iter = func(iter);
+        count++;
 
-      c.font = '48px serif';
+        if (count > 5) {
+          clearInterval(interval);
+        }
+      }, 500);
 
-      scene.forEach(function(sentence, idx) {
-        var mobIndex = 0| Math.random() * mobs.length;
-        var mob = mobs[mobIndex];
-        var log = sentence.replace('MOB', mob);
-
-        c.fillText(log, 100, 100 + (idx * 100));
-      })
 
 
       // END

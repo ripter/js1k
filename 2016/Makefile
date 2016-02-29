@@ -2,6 +2,7 @@
 
 LIB := ./node_modules
 BIN := $(LIB)/.bin
+DIST := public
 
 all: node_modules run
 
@@ -12,15 +13,7 @@ server:
 	$(BIN)/http-server -p 3000
 
 compress:
-	$(BIN)/uglifyjs public/137.js --screw-ie8 --mangle --compress > public/137_c.js
-	$(BIN)/uglifyjs public/137_ugly.js --screw-ie8 --mangle --compress > public/137_ugly_c.js
-	$(BIN)/uglifyjs public/187.js --screw-ie8 --mangle --compress > public/187_c.js
-	$(BIN)/uglifyjs public/195.js --screw-ie8 --mangle --compress > public/195_c.js
-	$(BIN)/uglifyjs public/290.js --screw-ie8 --mangle --compress > public/290_c.js
-	$(BIN)/uglifyjs public/296.js --screw-ie8 --mangle --compress > public/296_c.js
-	$(BIN)/uglifyjs public/300.js --screw-ie8 --mangle --compress > public/300_c.js
-	$(BIN)/uglifyjs public/304.js --screw-ie8 --mangle --compress > public/304_c.js
-	$(BIN)/uglifyjs public/403.js --screw-ie8 --mangle --compress > public/403_c.js
+	$(BIN)/uglifyjs $(DIST)/code.js --screw-ie8 --mangle --compress > $(DIST)/code_c.js
 
 clean:
 	npm cache clean
