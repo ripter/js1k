@@ -13,7 +13,8 @@ server:
 	$(BIN)/http-server -p 3000
 
 compress:
-	$(BIN)/uglifyjs $(DIST)/code.js --screw-ie8 --mangle --compress > $(DIST)/code_c.js
+	-$(BIN)/uglifyjs $(DIST)/code.js --screw-ie8 --mangle --compress > $(DIST)/code_c.js
+	$(BIN)/uglifyjs $(DIST)/dice/code.js --screw-ie8 --mangle --compress > $(DIST)/dice/code_c.js
 
 clean:
 	npm cache clean

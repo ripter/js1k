@@ -126,65 +126,141 @@
       // THIS IS WHERE YOUR DEMO GOES
       console.log('demo', window.a, b, window.c, window.g, window.d);
 
-
-      // 81 bytes uglified
-      function ls(rules, source) {
-        return source.split('').reduce(function(curr, code) {
-          return curr += rules[code] || code;
-        }, '');
-      }
-
-      var axiom = 'M';
-      var rules = {
-        'M': 'S:C:R',
-        'S': 'M S'
-      };
-
-
-      // Render an L-system string.
-      function render(origin, source) {
-        console.log(source);
-      }
-
-
-
-      // var func = ls.bind(null, rules);
-      // var origin = {
-      //   x: c.canvas.width/2,
-      //   y: c.canvas.height,
-      //   a: 6*(Math.PI/4) //angle
-      // };
-      // var iter = func(axiom);
-      // var draw = render.bind(null, origin);
-      //
-      //
-      // var count = 0;
-      // var interval = setInterval(function () {
-      //   draw(iter);
-      //   iter = func(iter);
-      //   count++;
-      //
-      //   if (count > 5) {
-      //     clearInterval(interval);
-      //   }
-      // }, 500);
-
-
-      var mobs = ['rad roach', 'mole rat', 'vicious dog'];
-      var scene = [
-        'A MOB slowly approaches.',
-        'I was able to kill the MOB'
-      ];
-
       c.font = '48px serif';
 
-      scene.forEach(function(sentence, idx) {
-        var mobIndex = 0| Math.random() * mobs.length;
-        var mob = mobs[mobIndex];
-        var log = sentence.replace('MOB', mob);
+      // Text is an array of strings.
+      // Example: ['one string', 'two string', 'three string', 'four']
+      function writeText(x, y, lineHeight, text) {
+        c.clearRect(x, y, 100, 100);
+        text.forEach(function(line, idx) {
+          c.fillText(line, x, y + (idx * lineHeight));
+          console.log(line);
+        });
+      }
 
-        c.fillText(log, 100, 100 + (idx * 100));
-      })
+      var write = writeText.bind(null, 100, 100, 100);
+
+      function render(text) {
+        var idx = 0;
+        var log = [];
+        var intervalID = window.setInterval(function() {
+          if (idx === text.length) {
+            window.clearInterval(intervalID);
+            return;
+          }
+
+          log.push(text[idx]);
+          idx += 1;
+          write(log);
+        }, 1000);
+      }
+
+      var goblin = {
+        name: 'Goblin',
+        hitpoitns: 6,
+        armorClass: 13,
+        attackBonus: 2,
+        damage: '1d4'
+      };
+
+      var fighter = {
+        name: 'Fighter',
+        hitpoitns: 11,
+        armorClass: 17,
+        attackBonus: 5,
+        damage: '1d8+4'
+      }
+
+
+
+
+
+      // 138 bytes.
+      // dice is a string in D&D style
+      // example: 2d6, 1d20, 4d2+7, 1d10-2
+      function rollDice(dice) {
+        var match = /(\d*)d(\d+)([+-]?\d*)/.exec(dice);
+        var numberOfDice = 0|match[1] || 1;
+        var numberOfSides = 0|match[2];
+        var modifier = 0|match[3];
+        var result = 0;
+
+        while (numberOfDice--) {
+          result += 0| (Math.random() * numberOfSides) + 1;
+        }
+
+        result += modifier;
+        return result;
+      }
+
+      function attack(bonus, damage, armorClass) {
+        if (rollDice('1d20+', bonus) >= armorClass) {
+          return rollDice(damage);
+        }
+        return 0;
+      }
+
+
+      var template = {
+        hit: function(name, damage) {
+          return name + ' hits for ' + damage + ' damage.';
+        },
+        miss: function(name) {
+          return name + ' swings wildly and misses.';
+        },
+        die: function(name) {
+          return name + ' has been slain.';
+        },
+        status: function(name, hp) {
+          return name + ' is down to ' + hp + ' hitpoitns.';
+        }
+      };
+
+      function battle(a, b) {
+        var log = [];
+        var dmg;
+        var initiative = [a, b];
+
+        while (a.hitpoitns > 0 && b.hitpoitns > 0) {
+          // A attacks B
+          dmg = attack(a.attackBonus, a.damage, b.armorClass);
+          b.hitpoitns -= dmg;
+          if (dmg === 0) {
+            log.push(template.miss(a.name));
+          } else {
+            log.push(template.hit(a.name, dmg));
+          }
+          log.push(template.status(b.name, b.hitpoitns));
+
+          if (b.hitpoitns <= 0) {
+            break;
+          }
+
+          // B attacks A
+          dmg = attack(b.attackBonus, b.damage, a.armorClass);
+          a.hitpoitns -= dmg;
+          if (dmg === 0) {
+            log.push(template.miss(b.name));
+          } else {
+            log.push(template.hit(b.name, dmg));
+          }
+          log.push(template.status(a.name, a.hitpoitns));
+        }
+
+        if (b.hitpoitns <= 0) {
+          log.push(template.die(b.name));
+        } else {
+          log.push(template.die(a.name));
+        }
+
+        return log;
+      };
+
+      var text = battle(fighter, goblin);
+
+
+      render(text);
+
 
 
       // END
