@@ -128,6 +128,10 @@
 
       var MAX_DISPLAY_LINES = 5;
       var LINE_HEIGHT = 75;
+      var DELAY = {
+        PAGE: 1000,
+        CHAPTER: 2000
+      };
       c.font = '36px Papyrus, fantasy';
 
       // Text is an array of strings.
@@ -135,7 +139,7 @@
       function writeText(x, y, lineHeight, text) {
         c.fillStyle = '#001f3f';
         c.fillRect(0, 0, a.width, a.height);
-        c.fillStyle = '#01FF70' //'#2ECC40';
+        c.fillStyle = '#01FF70'
         text.forEach(function(line, idx) {
           c.fillText(line, x, y + (idx * lineHeight));
           console.log(line);
@@ -143,26 +147,39 @@
       }
       var write = writeText.bind(null, 100, 100, LINE_HEIGHT);
 
-      function render(text) {
-        var idx = 0;
+      function render(journal) {
         var log = [];
-        var intervalID = window.setInterval(function() {
-          // Stop rendering when we've gone over the whole thing.
-          if (idx === text.length) {
-            window.clearInterval(intervalID);
-            return;
-          }
 
+        function addLog(line) {
           // Do we need to make room on the log?
           if (log.length === MAX_DISPLAY_LINES) {
-            // log.pop();
             log.shift();
           }
 
-          log.push(text[idx]);
-          idx += 1;
-          write(log);
-        }, 1000);
+          log.push(line);
+          return log;
+        }
+
+        function next(x, y) {
+          var chapter = journal[x];
+          var page = chapter[y];
+
+          // Out of chapters?
+          if (journal.length === x) {
+            return write(addLog('I\'ve been defeated.'));
+          }
+
+          // end of chapter?
+          if (chapter.length === y) {
+            return setTimeout(next.bind(0, x+1, 0), DELAY.CHAPTER);
+          }
+
+          write(addLog(page));
+          setTimeout(next.bind(0, x, y+1), DELAY.PAGE);
+        }
+
+        // Start the render loop
+        next(0, 0);
       }
 
 
@@ -232,6 +249,7 @@
         var attack = d20() + player.bab;
         if (attack >= trap.ac) {
           log.push('I found some gold coins!');
+          player.gold += d4();
         } else {
           log.push('It was a trap!');
 
@@ -243,22 +261,35 @@
         return log;
       }
 
+      function status(player) {
+        var log = [
+          'Status: HP ' + player.hp + ', Gold ' + player.gold
+        ];
+        return log;
+      }
+
 
       function run() {
         var log = [];
-        var player = {hp: 11, bab: 5, ac: 17};
+        var player = {hp: 11, bab: 5, ac: 17, gold: 0};
         var goblin = {name: 'Goblin', bab: 2, ac: 13, dmg: d4};
         var trapRock = {name: 'strange rocks', ac: 13, dmg: d4};
-        var result;
+        var result, roll;
 
         while (player.hp > 0) {
-          if (d4() > 2) {
+          roll = d4();
+
+          if (1 === roll) {
             result = battle(player, goblin);
-            log = log.concat(result);
-          } else {
-            result = trap(player, trapRock);
-            log = log.concat(result);
           }
+          if (2 === roll) {
+            result = trap(player, trapRock);
+          }
+          if (3 === roll) {
+            // result = status(player);
+          }
+
+          log.push(result);
         }
 
         return log;
