@@ -126,27 +126,37 @@
       // THIS IS WHERE YOUR DEMO GOES
       console.log('demo', window.a, b, window.c, window.g, window.d);
 
-      c.font = '48px serif';
+      var MAX_DISPLAY_LINES = 5;
+      var LINE_HEIGHT = 75;
+      c.font = '36px Papyrus, fantasy';
 
       // Text is an array of strings.
       // Example: ['one string', 'two string', 'three string', 'four']
       function writeText(x, y, lineHeight, text) {
-        c.clearRect(x, y, 100, 100);
+        c.fillStyle = '#001f3f';
+        c.fillRect(0, 0, a.width, a.height);
+        c.fillStyle = '#01FF70' //'#2ECC40';
         text.forEach(function(line, idx) {
           c.fillText(line, x, y + (idx * lineHeight));
           console.log(line);
         });
       }
-
-      var write = writeText.bind(null, 100, 100, 100);
+      var write = writeText.bind(null, 100, 100, LINE_HEIGHT);
 
       function render(text) {
         var idx = 0;
         var log = [];
         var intervalID = window.setInterval(function() {
+          // Stop rendering when we've gone over the whole thing.
           if (idx === text.length) {
             window.clearInterval(intervalID);
             return;
+          }
+
+          // Do we need to make room on the log?
+          if (log.length === MAX_DISPLAY_LINES) {
+            // log.pop();
+            log.shift();
           }
 
           log.push(text[idx]);
@@ -154,25 +164,6 @@
           write(log);
         }, 1000);
       }
-
-      var goblin = {
-        name: 'Goblin',
-        hitpoitns: 6,
-        armorClass: 13,
-        attackBonus: 2,
-        damage: '1d4'
-      };
-
-      var fighter = {
-        name: 'Fighter',
-        hitpoitns: 11,
-        armorClass: 17,
-        attackBonus: 5,
-        damage: '1d8+4'
-      }
-
-
-
 
 
       // 138 bytes.
@@ -193,73 +184,90 @@
         return result;
       }
 
-      function attack(bonus, damage, armorClass) {
-        if (rollDice('1d20+', bonus) >= armorClass) {
-          return rollDice(damage);
-        }
-        return 0;
-      }
+      var d20 = rollDice.bind(0, '1d20');
+      var d4 = rollDice.bind(0, '1d4');
+
+      // Basic battle:
+      // I spoted a Goblin.
+      // That Goblin was no match for me!
+      // I suffered 1 damage.
 
 
-      var template = {
-        hit: function(name, damage) {
-          return name + ' hits for ' + damage + ' damage.';
-        },
-        miss: function(name) {
-          return name + ' swings wildly and misses.';
-        },
-        die: function(name) {
-          return name + ' has been slain.';
-        },
-        status: function(name, hp) {
-          return name + ' is down to ' + hp + ' hitpoitns.';
-        }
-      };
+      // Player battles a monster!
+      // Mutates player.hp
+      // player {hp, bab, ac}
+      // monster {name, bab, ac, dmg}
+      function battle(player, monster) {
+        var log = [
+          'I spotted a ' + monster.name + '.'
+          , (d20() + player.bab) >= monster.ac ?
+            'The '+ monster.name +' was no match for me!'
+            : 'I managed to flee.'
+        ];
+        var attack;
 
-      function battle(a, b) {
-        var log = [];
-        var dmg;
-        var initiative = [a, b];
-
-        while (a.hitpoitns > 0 && b.hitpoitns > 0) {
-          // A attacks B
-          dmg = attack(a.attackBonus, a.damage, b.armorClass);
-          b.hitpoitns -= dmg;
-          if (dmg === 0) {
-            log.push(template.miss(a.name));
-          } else {
-            log.push(template.hit(a.name, dmg));
-          }
-          log.push(template.status(b.name, b.hitpoitns));
-
-          if (b.hitpoitns <= 0) {
-            break;
-          }
-
-          // B attacks A
-          dmg = attack(b.attackBonus, b.damage, a.armorClass);
-          a.hitpoitns -= dmg;
-          if (dmg === 0) {
-            log.push(template.miss(b.name));
-          } else {
-            log.push(template.hit(b.name, dmg));
-          }
-          log.push(template.status(a.name, a.hitpoitns));
-        }
-
-        if (b.hitpoitns <= 0) {
-          log.push(template.die(b.name));
-        } else {
-          log.push(template.die(a.name));
+        // Monster attack
+        if ((d20() + monster.bab) > player.ac) {
+          attack = monster.dmg();
+          player.hp -= attack;
+          log.push('I took ' + attack + ' damage.');
         }
 
         return log;
-      };
+      }
 
-      var text = battle(fighter, goblin);
+      // basic trap
+      // I see a strange rock.
+      // It was a trap!
+      // I took X damage.
+
+      // Player triggers a trap.
+      // player = {bab, hp}
+      // trap = {name, ac, dmg}
+      function trap(player, trap) {
+        var log = [
+          'I see a ' + trap.name
+        ];
+
+        var attack = d20() + player.bab;
+        if (attack >= trap.ac) {
+          log.push('I found some gold coins!');
+        } else {
+          log.push('It was a trap!');
+
+          attack = trap.dmg();
+          player.hp -= attack;
+          log.push('I took ' + attack + ' damage.');
+        }
+
+        return log;
+      }
 
 
-      render(text);
+      function run() {
+        var log = [];
+        var player = {hp: 11, bab: 5, ac: 17};
+        var goblin = {name: 'Goblin', bab: 2, ac: 13, dmg: d4};
+        var trapRock = {name: 'strange rocks', ac: 13, dmg: d4};
+        var result;
+
+        while (player.hp > 0) {
+          if (d4() > 2) {
+            result = battle(player, goblin);
+            log = log.concat(result);
+          } else {
+            result = trap(player, trapRock);
+            log = log.concat(result);
+          }
+        }
+
+        return log;
+      }
+
+      // Try it out
+      // battle returns an l-system string.
+      var log = run();
+      render(log);
 
 
 
