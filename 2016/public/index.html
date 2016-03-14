@@ -135,17 +135,16 @@
         function logLine(entry, delay) {
           journal.push({entry: entry, delay: delay || 1000});
         }
-        // displays a line from the journal at a time.
-        function writeLine() {
+        // render the journal as a slow scroll
+        function render() {
           var log = journal.shift();
           if (!log) { return; }
-          var line = log.entry;
 
           // use a buffer for the 'scroll' effect
           if (5 === displayBuffer.length) {
             displayBuffer.shift();
           }
-          displayBuffer.push(line);
+          displayBuffer.push(log.entry);
 
           // render the buffer
           c.font = '36px Papyrus, fantasy';
@@ -157,7 +156,7 @@
             c.fillText(line, 100, 100 + (idx * 75));
           });
 
-          setTimeout(writeLine, log.delay);
+          setTimeout(render, log.delay);
         }
 
         // Random number
@@ -180,6 +179,7 @@
           var attack;
 
           while (player.hp > 0 && hpMonster > 0) {
+
             if (d20() + player.bab >= monster.ac) {
               attack = player.dmg();
               hpMonster -= attack;
@@ -226,7 +226,7 @@
         }
 
         function status(player) {
-          logLine('Status: HP ' + player.hp + ', Gold ' + player.gold);
+          logLine('Camping. I have HP:' + player.hp + ', Gold: ' + player.gold);
         }
 
         function run() {
@@ -259,11 +259,9 @@
         }
 
 
-        // Try it out
-        // function is called on entry add/log
+        // Generate the journal and render it.
         run();
-        // start writing the journal.
-        writeLine();
+        render();
       })();
       // END
     </script>
