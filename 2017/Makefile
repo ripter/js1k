@@ -8,4 +8,4 @@ server:
 	$(BIN)/http-server
 
 compress:
-	$(BIN)/uglifyjs $(DIST)/code.js --screw-ie8 --mangle --compress > $(DIST)/code_c.js
+	$(BIN)/uglifyjs code.js --screw-ie8 --mangle --compress > code_c.js
