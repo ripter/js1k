@@ -101,3 +101,55 @@ var array = ['one','two']
 // ['','','','','','']
 var array = ['one','two','three','four','five','six']
 ```
+
+## Nested Array
+Use array literal syntax `[['',''],['','']]`
+* Cost: `2+(y*2)+(x*y-1)+(x*y*2)`
+* 2 bytes = `[]`
+* y*2 bytes = `[]`
+* x*y-1 bytes = `,`
+* x*y*2 bytes = `''`
+
+*x=2,y=2 Cost 17 bytes*
+```
+// x = 2
+// y = 2
+// Cost: 17 bytes
+// [['',''],['','']]
+var array = [['one','two'],['three', 'four']]
+```
+
+*x=2,y=4 Cost 33 bytes*
+```
+// x = 2
+// y = 4
+// Cost: 33 bytes
+// [['',''],['',''],['',''],['','']]
+var array = [['one','two'],['three', 'four'],['five', 'six'],['seven', 'eight']]
+```
+
+## Nested Array String.split
+Use String `.split` to create nested arrays.
+* Cost `51+(y-1)+((x-1)*y)`
+* 49 bytes = `.split(';').map(function(p){return p.split(',')})`
+* 2 bytes = `''`
+* y-1 bytes = `,`
+* (x-1)*y = `,`
+
+*x=2,y=2 Cost 54 bytes*
+```
+// x = 2
+// y = 2
+// Cost: 54 bytes
+// ',;,'.split(';').map(function(p){return p.split(',')})
+var array = 'one,two;three,four'.split(';').map(function(p){return p.split(',')})
+```
+
+*x=2,y=4 Cost 58 bytes*
+```
+// x = 2
+// y = 4
+// Cost: 58 bytes
+// ',;,;,;,'.split(';').map(function(p){return p.split(',')})
+var array = 'one,two;three,four;five,six;seven,eight'.split(';').map(function(p){return p.split(',')})
+```
