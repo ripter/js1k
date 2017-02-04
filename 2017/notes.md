@@ -9,12 +9,21 @@ Using arrays to build strings.
 * 2*n bytes = `''`
 * 9 bytes = `.join('')`
 
-*Cost: 16 bytes*
+*n=2 Cost: 16 bytes*
 ```
 // n = 2
 // 11+(2*2)+(2-1) = 16
 // cost: 16 bytes
 // ['',''].join('')
+var str = ['one', 'two'].join('')
+```
+
+*n=6 Cost: 28 bytes*
+```
+// n = 6
+// 11+(2*6)+(6-1) = 28
+// cost: 28 bytes
+// ['','','','','',''].join('')
 var str = ['one', 'two'].join('')
 ```
 
@@ -25,7 +34,7 @@ Use the `+` to build strings.
 * 2*n bytes = `''`
 * n-1 bytes = `,`
 
-*Cost 5 bytes*
+*n=2 Cost 5 bytes*
 ```
 // n = 2
 // (2*2)+(2-1) = 5
@@ -34,7 +43,7 @@ Use the `+` to build strings.
 var string = 'one'+'two'
 ```
 
-*Cost 17 bytes*
+*n=6 Cost 17 bytes*
 ```
 // n = 6
 // (2*6)+(6-1) = 5
