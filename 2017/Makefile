@@ -13,3 +13,6 @@ compress:
 
 rename:
 	./rename.sh
+
+rename.fail:
+	./rename_fail.sh
