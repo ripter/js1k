@@ -1,4 +1,4 @@
-function createSVG(polygons) {
+function createSVG(elm, polygons) {
   const div = document.createElement('div');
   const renderedPolygons = polygons.map(function(polygon) {
     return [
@@ -14,6 +14,7 @@ function createSVG(polygons) {
     '<svg viewBox="0 0 100 100">',
     renderedPolygons,
     '</svg>'].join('');
+  elm.append(div);
   return div;
 }
 
@@ -46,11 +47,10 @@ window.magic = function magic(evt) {
   }
 };
 
-var tree = createSVG([
+var tree = createSVG(document.body, [
   ['40,50 60,50 60,100 40,100', 'fill: brown;'],
   ['25,25 75,25 75,75, 25,75', 'fill: #2ECC40;'],
   ['18,19 18,44 43,44, 43,19', 'fill: #2ECC40;'],
   ['60,47 60,72 85,72, 85,47', 'fill: #2ECC40;'],
 ]);
 createCSS(tree);
-b.prepend(tree);
