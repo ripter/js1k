@@ -1,24 +1,32 @@
 function createSVG(polygons) {
-  return '<svg viewBox="0 0 100 100">'
-    +polygons.map(function(polygon) {
-      return '<polygon points="'+polygon[0]+'" style="'+polygon[1]+'"'+
-        ['down','move','up','out'].reduce(function(acc, curr) {
-          return acc+'onMouse'+curr+'="m(event)" ';
-        }, '')
-      +'/>';
-    }).join('')
-    +'</svg>';
+  const div = document.createElement('div');
+  const renderedPolygons = polygons.map(function(polygon) {
+    return [
+      '<polygon points="',
+      polygon[0],
+      '" style="',
+      polygon[1],
+      '" onMousedown="magic(event)" onMousemove="magic(event)" onMouseup="magic(event)" onMouseout="magic(event)"/>',
+    ].join('');
+  }).join('');
+
+  div.innerHTML = [
+    '<svg viewBox="0 0 100 100">',
+    renderedPolygons,
+    '</svg>'].join('');
+  return div;
 }
 
-function add(tag, innerHTML, parent) {
-  var elm = document.createElement(tag);
-  elm.innerHTML = innerHTML;
-  parent.prepend(elm);
-  return elm;
+function createCSS(elm) {
+  const style = document.createElement('style');
+  style.innerHTML = 'svg {height:300px; width:300px;}svg polygon {stroke: #001f3f;}'
+  elm.append(style);
+  return style;
 }
+
 
 window.active = null;
-window.m = function magic(evt) {
+window.magic = function magic(evt) {
   switch (evt.type) {
     case 'mousedown':
       window.active = [evt.x, evt.y];
@@ -35,10 +43,11 @@ window.m = function magic(evt) {
   }
 };
 
-var t = add('div', createSVG([
+var tree = createSVG([
   ['40,50 60,50 60,100 40,100', 'fill: brown;'],
   ['25,25 75,25 75,75, 25,75', 'fill: #2ECC40;'],
   ['18,19 18,44 43,44, 43,19', 'fill: #2ECC40;'],
   ['60,47 60,72 85,72, 85,47', 'fill: #2ECC40;'],
-]), b);
-add('style', 'svg {height:300px; width:300px;}svg polygon {stroke: #001f3f;}', t);
+]);
+createCSS(tree);
+b.prepend(tree);
