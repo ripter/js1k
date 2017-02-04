@@ -1,6 +1,7 @@
 #!/bin/bash
 FILE_SIZE=$(stat -f%z ./code_rp.js)
-echo ./code_rm_$FILE_SIZE.js
-cp ./code.js ./code_$FILE_SIZE.js
-mv ./code_c.js ./code_c_$FILE_SIZE.js
-mv ./code_rp.js ./code_rp_$FILE_SIZE.js
+echo SIZE: $FILE_SIZE
+# echo ./$FILE_SIZE\_code.js
+cp ./code.js ./$FILE_SIZE\_code.js
+mv ./code_c.js ./$FILE_SIZE\_code_c.js
+mv ./code_rp.js ./$FILE_SIZE\_code_rp.js
