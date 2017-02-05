@@ -14,6 +14,7 @@ Using arrays to build strings.
 // 11+(2*2)+(2-1) = 16
 // Cost: 16 bytes
 // ['',''].join('')
+// Example:
 var str = ['one', 'two'].join('')
 ```
 
@@ -23,6 +24,7 @@ var str = ['one', 'two'].join('')
 // 11+(2*6)+(6-1) = 28
 // Cost: 28 bytes
 // ['','','','','',''].join('')
+// Example:
 var str = ['one', 'two'].join('')
 ```
 
@@ -39,6 +41,7 @@ Use the `+` to build strings.
 // (2*2)+(2-1) = 5
 // Cost: 5 bytes
 // ''+''
+// Example:
 var string = 'one'+'two'
 ```
 
@@ -48,11 +51,13 @@ var string = 'one'+'two'
 // (2*6)+(6-1) = 5
 // Cost: 17 bytes
 // ''+''+''+''+''+''
+// Example:
 var string = 'one'+'two'+'three'+'four'+'five'+'six'
 ```
 
 
 # Making Arrays
+
 ## String.split(',')
 Use `.split` to turn a string into an array.
 * Cost: `13+(n-1)` bytes
@@ -65,6 +70,7 @@ Use `.split` to turn a string into an array.
 // 13+(2-1) == 14
 // Cost: 14 bytes
 // ','.split(',')
+// Example:
 var array = 'one,two'.split(',')
 ```
 
@@ -74,6 +80,7 @@ var array = 'one,two'.split(',')
 // 13+(6-1) == 18
 // Cost: 18 bytes
 // ',,,,,'.split(',')
+// Example:
 var array = 'one,two,three,four,five,six'.split(',')
 ```
 
@@ -90,6 +97,7 @@ Use array literal snytax `['','']`
 // 2+(2-1)+(2*2) = 7
 // Cost: 7 bytes
 // ['','']
+// Example:
 var array = ['one','two']
 ```
 
@@ -99,6 +107,7 @@ var array = ['one','two']
 // 2+(6-1)+(6*2) = 19
 // Cost: 19 bytes
 // ['','','','','','']
+// Example:
 var array = ['one','two','three','four','five','six']
 ```
 
@@ -116,6 +125,7 @@ Use array literal syntax `[['',''],['','']]`
 // y = 2
 // Cost: 17 bytes
 // [['',''],['','']]
+// Example:
 var array = [['one','two'],['three', 'four']]
 ```
 
@@ -125,6 +135,7 @@ var array = [['one','two'],['three', 'four']]
 // y = 4
 // Cost: 33 bytes
 // [['',''],['',''],['',''],['','']]
+// Example:
 var array = [['one','two'],['three', 'four'],['five', 'six'],['seven', 'eight']]
 ```
 
@@ -142,6 +153,7 @@ Use String `.split` to create nested arrays.
 // y = 2
 // Cost: 54 bytes
 // ',;,'.split(';').map(function(p){return p.split(',')})
+// Example:
 var array = 'one,two;three,four'.split(';').map(function(p){return p.split(',')})
 ```
 
@@ -151,5 +163,72 @@ var array = 'one,two;three,four'.split(';').map(function(p){return p.split(',')}
 // y = 4
 // Cost: 58 bytes
 // ',;,;,;,'.split(';').map(function(p){return p.split(',')})
+// Example:
 var array = 'one,two;three,four;five,six;seven,eight'.split(';').map(function(p){return p.split(',')})
+```
+
+
+# Loops
+
+## Map
+Use [].map
+* Cost: `28`
+* 23 bytes = `.map(function(i){return`
+* 1 byte = `i` something has to be returned so at least 1 byte.
+* 2 bytes = `})`
+
+*Cost 28 bytes*
+```
+// Cost: 28 bytes
+// .map(function(i){return i})
+// Example:
+['one', 'two'].map(function(i){
+  return i;
+})
+```
+
+
+## for
+Use for(;;)
+* Cost: `37`
+* 37 bytes = `for(i=0;i<l.length;i++){r.push(l[i])}`
+
+*Cost 37 bytes*
+```
+// Cost: 37 bytes
+// for(i=0;i<l.length;i++){r.push(l[i])}
+// Example:
+var list=['one', 'two'],result=[]
+for(i=0; i < list.length; i++){
+  r.push(list[i])
+}
+```
+
+## While
+Use while()
+* Cost: `25`
+* 25 bytes = `while(i--){r.push(l[i]);}`
+
+*Cost 25 bytes*
+```
+// Cost: 25 bytes
+// while(i--){r.push(l[i]);}
+// Example:
+var l=['one', 'two'],i=l.length,r=[]
+while(i--){r.push(l[i]);}
+```
+
+## Reduce
+Use reduce()
+* Cost: `32`
+* 32 bytes = `.reduce(function(a,c){return a})`
+
+*Cost 32 bytes*
+```
+// Cost 32
+// .reduce(function(a,c){return a})
+// Example:
+['one', 'two'].reduce(function(acc, curr) {
+  return acc;
+});
 ```
