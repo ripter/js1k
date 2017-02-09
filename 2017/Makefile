@@ -9,8 +9,8 @@ server:
 compress: babili
 
 babili:
-	$(BIN)/babili --minified true code.js -o code_babili.js
-	$(BIN)/regpack --useES6 true code_babili.js > code_babili_rp.js
+	$(BIN)/babili code.js -o code_babili.js --minified true 
+	$(BIN)/regpack code_babili.js --useES6 true > code_babili_rp.js
 	stat -f%z ./code_babili_rp.js
 
 uglify:

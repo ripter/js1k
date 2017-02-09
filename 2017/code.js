@@ -1,10 +1,11 @@
 function createSVG(polygons) {
   return '<svg viewBox="0 0 100 100">'
     +polygons.map(function(polygon) {
-      return '<polygon points="'+polygon[0]+'" style="'+polygon[1]+'"'+
-        ['down','move','up','out'].reduce(function(acc, curr) {
-          return acc+'onMouse'+curr+'="m(event)" ';
-        }, '')
+      return '<polygon points="'+polygon[0]+'" style="'+polygon[1]+'"'
+        // +['down','move','up','out'].reduce(function(acc, curr) {
+        //   return acc+'onMouse'+curr+'="m(event)" ';
+        // }, '')
+        // +['down','move','up','out'].reduce((acc, curr) => acc+'onMouse'+curr+'="m(event)" ', '')
       +'/>';
     }).join('')
     +'</svg>';
@@ -21,27 +22,44 @@ function add(tag, innerHTML, parent) {
 }
 
 
-window.active = null;
+let active = null;
 window.m = function magic(evt) {
-  var target = evt.target;
+  let target = evt.target;
+  let deltaX, deltaY, points;
 
   switch (evt.type) {
     case 'mousedown':
-      window.active = [evt.x, evt.y];
-      target.deltaX = evt.x;
-      target.deltaY = evt.y;
+      active = target;
+      // if (!active.delta) {
+      active.start = [evt.x, evt.y];
+      // }
+      console.log('down', active.delta, active);
       break;
     case 'mousemove':
-      if (!window.active) { return; }
-      // const deltaX = evt.x - active[0];
-      // const deltaY = evt.y - active[1];
-      var deltaX = evt.x - target.deltaX;
-      var deltaY = evt.y - target.deltaY;
-      evt.target.setAttribute('transform', 'translate('+deltaX+', '+deltaY+')');
+      if (!active) { return; }
+      active.deltaX = evt.x - active.start[0];
+      active.deltaY = evt.y - active.start[1];
+      target.setAttribute('transform', 'translate('+active.deltaX+', '+active.deltaY+')');
       break;
     case 'mouseup':
     case 'mouseout':
-      window.active = null;
+      if (!active) { return; }
+      if (active == target) { return; }
+      console.log('up', active);
+      console.log('deltaX', active.deltaX, 'deltaY', active.deltaY)
+      points = active.getAttribute('points');
+      console.log('before', points);
+      points = points.replace(/([\d.]+),([\d.]+)/g, function(pair, x, y) {
+        let newX = +x+active.deltaX;
+        let newY = +y+active.deltaY;
+        console.log(pair, '(x,y)', x, y, '(newX, newY)', newX, newY);
+        return ''+newX+','+newY;
+      });
+      console.log('after', points);
+
+      active.setAttribute('points', points);
+      active.removeAttribute('transform');
+      active = null;
   }
 };
 
@@ -57,12 +75,16 @@ var tangram = [
 
 var SCALE = 0.25;
 tangram = tangram.map(function(polygon) {
-  polygon[0] = polygon[0].replace(/(\d+),(\d+)/g, function(point, x, y) {
-    return ''+ x*SCALE +','+ y*SCALE;
-  });
-  // polygon[0] = polygon[0].replace(/(\d+)/g, (x) => x*SCALE);
+  // polygon[0] = polygon[0].replace(/(\d+),(\d+)/g, function(point, x, y) {
+  //   return ''+ x*SCALE +','+ y*SCALE;
+  // });
+  polygon[0] = polygon[0].replace(/(\d+)/g, (x) => x*SCALE);
   return polygon;
 });
 
 var elmSvg = add('div', createSVG(tangram), b);
 // add('style', 'svg {height:300px; width:300px;}svg polygon {stroke: #001f3f;}', elmSvg);
+
+['down','move','up','out'].forEach(function(eventName) {
+  elmSvg.addEventListener('mouse'+eventName, window.m);
+});

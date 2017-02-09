@@ -1,5 +1,52 @@
 # Making Strings
 
+## String + String
+Use the `+` to build strings.
+* Cost: `(2*n)+(n-1)` bytes
+* 2*n bytes = `''`
+* n-1 bytes = `,`
+
+*n=2 Cost 5 bytes*
+```
+// n = 2
+// (2*2)+(2-1) = 5
+// Cost: 5 bytes
+// ''+''
+// Example:
+var string = 'one'+'two'
+```
+
+*n=6 Cost 17 bytes*
+```
+// n = 6
+// (2*6)+(6-1) = 5
+// Cost: 17 bytes
+// ''+''+''+''+''+''
+// Example:
+var string = 'one'+'two'+'three'+'four'+'five'+'six'
+```
+
+
+## ES6 template
+* Cost: `2+(4*n)` bytes
+* 2 bytes = ``
+* 4*n bytes = `${i}`
+
+*n=2 Cost: 10 bytes*
+```
+// n = 2
+// Cost: 10 bytes
+let str = `${i}${i}`;
+```
+
+*n=6 Cost 26 bytes*
+```
+// n = 6
+// Cost: 26 bytes
+let str = `${i}${i}${i}${i}${i}${i}`;
+```
+
+
 ## Array.join('')
 Using arrays to build strings.
 * Cost: `11+(2*n)+(n-1)` bytes
@@ -29,60 +76,8 @@ var str = ['one', 'two'].join('')
 ```
 
 
-## String + String
-Use the `+` to build strings.
-* Cost: `(2*n)+(n-1)` bytes
-* 2*n bytes = `''`
-* n-1 bytes = `,`
-
-*n=2 Cost 5 bytes*
-```
-// n = 2
-// (2*2)+(2-1) = 5
-// Cost: 5 bytes
-// ''+''
-// Example:
-var string = 'one'+'two'
-```
-
-*n=6 Cost 17 bytes*
-```
-// n = 6
-// (2*6)+(6-1) = 5
-// Cost: 17 bytes
-// ''+''+''+''+''+''
-// Example:
-var string = 'one'+'two'+'three'+'four'+'five'+'six'
-```
-
 
 # Making Arrays
-
-## String.split(',')
-Use `.split` to turn a string into an array.
-* Cost: `13+(n-1)` bytes
-* 13 bytes = `''.split(',')`
-* n-1 bytes = `,`
-
-*n=2 Cost 14 bytes*
-```
-// n = 2
-// 13+(2-1) == 14
-// Cost: 14 bytes
-// ','.split(',')
-// Example:
-var array = 'one,two'.split(',')
-```
-
-*n=6 Cost 17 bytes*
-```
-// n = 6
-// 13+(6-1) == 18
-// Cost: 18 bytes
-// ',,,,,'.split(',')
-// Example:
-var array = 'one,two,three,four,five,six'.split(',')
-```
 
 ## Array literal
 Use array literal snytax `['','']`
@@ -109,6 +104,33 @@ var array = ['one','two']
 // ['','','','','','']
 // Example:
 var array = ['one','two','three','four','five','six']
+```
+
+
+## String.split(',')
+Use `.split` to turn a string into an array.
+* Cost: `13+(n-1)` bytes
+* 13 bytes = `''.split(',')`
+* n-1 bytes = `,`
+
+*n=2 Cost 14 bytes*
+```
+// n = 2
+// 13+(2-1) == 14
+// Cost: 14 bytes
+// ','.split(',')
+// Example:
+var array = 'one,two'.split(',')
+```
+
+*n=6 Cost 17 bytes*
+```
+// n = 6
+// 13+(6-1) == 18
+// Cost: 18 bytes
+// ',,,,,'.split(',')
+// Example:
+var array = 'one,two,three,four,five,six'.split(',')
 ```
 
 ## Nested Array
@@ -170,8 +192,23 @@ var array = 'one,two;three,four;five,six;seven,eight'.split(';').map(function(p)
 
 # Loops
 
+## While
+Use while()
+* Cost: `25`
+* 25 bytes = `while(i--){r.push(l[i]);}`
+
+*Cost 25 bytes*
+```
+// Cost: 25 bytes
+// while(i--){r.push(l[i]);}
+// Example:
+var l=['one', 'two'],i=l.length,r=[]
+while(i--){r.push(l[i]);}
+```
+
+
 ## Map
-Use [].map
+Use map()
 * Cost: `28`
 * 23 bytes = `.map(function(i){return`
 * 1 byte = `i` something has to be returned so at least 1 byte.
@@ -185,6 +222,22 @@ Use [].map
 ['one', 'two'].map(function(i){
   return i;
 })
+```
+
+
+## Reduce
+Use reduce()
+* Cost: `32`
+* 32 bytes = `.reduce(function(a,c){return a})`
+
+*Cost 32 bytes*
+```
+// Cost 32
+// .reduce(function(a,c){return a})
+// Example:
+['one', 'two'].reduce(function(acc, curr) {
+  return acc;
+});
 ```
 
 
@@ -202,33 +255,4 @@ var list=['one', 'two'],result=[]
 for(i=0; i < list.length; i++){
   r.push(list[i])
 }
-```
-
-## While
-Use while()
-* Cost: `25`
-* 25 bytes = `while(i--){r.push(l[i]);}`
-
-*Cost 25 bytes*
-```
-// Cost: 25 bytes
-// while(i--){r.push(l[i]);}
-// Example:
-var l=['one', 'two'],i=l.length,r=[]
-while(i--){r.push(l[i]);}
-```
-
-## Reduce
-Use reduce()
-* Cost: `32`
-* 32 bytes = `.reduce(function(a,c){return a})`
-
-*Cost 32 bytes*
-```
-// Cost 32
-// .reduce(function(a,c){return a})
-// Example:
-['one', 'two'].reduce(function(acc, curr) {
-  return acc;
-});
 ```
