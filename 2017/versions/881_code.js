@@ -48,10 +48,8 @@ var m = window.m = function(evt) {
   }
 };
 
-// Create a polygon for each tangram
 var SCALE = 2.5;
 var tangram = [
-  // viewBox 0,0 100,100 use to create 
   ['0,0 0,100 50,50', 'fill: #001f3f'],
   ['0,100 100,100 50,50', 'fill: #0074D9'],
   ['100,100 100,50 75,75', 'fill: #7FDBFF'],
@@ -60,20 +58,18 @@ var tangram = [
   ['50,50 75,25 25,25', 'fill: #2ECC40'],
   ['0,0 50,0 75,25 25,25', 'fill: #01FF70'],
 ].map(function(polygon) {
-  // scale it to size
+  // polygon[0] = polygon[0].replace(/(\d+)/g, (x) => x*SCALE);
   polygon[0] = polygon[0].replace(/(\d+)/g, function(x) {
     return x*SCALE
   });
   return polygon;
 });
 
-// Create the SVG and prepend it to body
 var elm = document.createElement('div');
 elm.innerHTML = '<svg viewBox="0 0 1000 800">'+tangram.map(function(polygon) {
   return '<polygon points="'+polygon[0]+'" style="'+polygon[1]+'"'+'/>';
 }).join('')+'</svg>';
 b.prepend(elm);
-// listen to events on the svg
 'mousedown mousemove mouseup touchstart touchend touchmove'.replace(/\w+/g, function(eventName) {
   elm.addEventListener(eventName, m);
 });
