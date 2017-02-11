@@ -6,7 +6,7 @@ all: server
 server:
 	$(BIN)/http-server
 
-compress: babili
+compress: babili uglify
 
 babili:
 	$(BIN)/babili code.js -o code_babili.js
