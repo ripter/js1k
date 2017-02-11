@@ -1,0 +1,7 @@
+{
+  "presets": ["es2015", "babili"],
+  "plugins": [
+    "babel-plugin-transform-remove-console",
+    "babel-plugin-transform-undefined-to-void"
+  ]
+}
