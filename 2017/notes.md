@@ -1,3 +1,16 @@
+# Snippits
+
+*Toggle between 0-1*
+```
+i?i=0:i=1
+```
+
+*Toggle between 0-3*
+```
+i>2?i=0:++i
+```
+
+
 # Making Strings
 
 ## String + String
