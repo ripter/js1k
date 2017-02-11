@@ -232,12 +232,24 @@ Use reduce()
 
 *Cost 32 bytes*
 ```
-// Cost 32
+// Cost 32 bytes
 // .reduce(function(a,c){return a})
 // Example:
 ['one', 'two'].reduce(function(acc, curr) {
   return acc;
 });
+```
+
+## Replace
+Use a string instead of an array and String.replace.
+* Cost: `24`
+
+*Cost: 24 bytes*
+```
+// Cost 24 bytes
+// .replace(/\w+/g, w => w)
+// Example:
+'one two'.replace(/\w+/g, w => w)
 ```
 
 
