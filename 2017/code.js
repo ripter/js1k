@@ -1,3 +1,35 @@
+// function magic(evt) {
+//   evt.preventDefault();
+//   var type = evt.type;
+//   var x = evt.pageX;
+//   var y = evt.pageY;
+//
+//   // Touch a polygon to start the drag
+//   // touchstart, mousedown
+//   if (evt.target.tagName == 'polygon' && type.match(/r|w/)){
+//     console.log('start')
+//     return;
+//   }
+//   // make sure we have a polygon
+//   else if (active) {
+//     // Drag
+//     // touchmove, mousemove
+//     if (type.match(/v/)) {
+//     }
+//     // Drop or Click
+//     // touchend, mouseup
+//     if (type.match(/p|nd/)) {
+//     }
+//     //
+//     // Click
+//     else {
+//     }
+//   }
+//
+//   // re-render
+//   elm.innerHTML = render(svg);
+// }
+
 var i;
 var active = false;
 var delta, start;
