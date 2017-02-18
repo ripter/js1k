@@ -25,16 +25,8 @@ function magic(evt) {
       html = active.replace(/la[^"]*/, function(translate) {
         return translate.replace(getPair, deltaX+','+deltaY)
       })
-      // html = html.replace(getPolygon, function(polygon) {
-      //   return polygon
-      //     .replace(/la[^"]*/, function(translate) {
-      //       return translate.replace(getPair, deltaX+','+deltaY)
-      //     })
-      // });
-      // console.log(evt.target);
-      elm.innerHTML = elm.innerHTML.replace(active, html)
-      active = html
-
+      // keep active
+      i=1;
     }
     // Drop or Click
     // touchend, mouseup
@@ -46,18 +38,8 @@ function magic(evt) {
         })
       })
       .replace(/la[^"]*/, 'late(0,0)')
-      // html = html.replace(getPolygon, function(polygon) {
-      //   return polygon
-      //     // Drop
-      //     .replace(/^[^"]+/g, function(points) {
-      //       return points.replace(/([\d.-]+)/g, function(point) {
-      //         return +point+[deltaX, deltaY][i?i=0:i=1];
-      //       });
-      //     })
-      //     .replace(/la[^"]*/, 'late(0,0)')
-      // });
-      elm.innerHTML = elm.innerHTML.replace(active, html);
-      html = active = 0
+      // reset active
+      i=0;
     }
     //
     // Click
@@ -69,19 +51,13 @@ function magic(evt) {
           return (0|(nx*100))/100 +','+ (0|(ny*100))/100
         });
       })
-      // html = html.replace(getPolygon, function(polygon) {
-      //   return polygon
-      //     .replace(/^[^"]+/g, function(points) {
-      //       return points.replace(getPair, function(_, pX, pY) {
-      //         nx = (.7 * (pX - x)) + (.7 * (pY - y)) + x,
-      //         ny = (.7 * (pY - y)) - (.7 * (pX - x)) + y;
-      //         return (0|(nx*100))/100 +','+ (0|(ny*100))/100
-      //       });
-      //     })
-      // });
-      elm.innerHTML = elm.innerHTML.replace(active, html);
-      html = active = 0
+      // reset active
+      i=0;
     }
+
+    elm.innerHTML = elm.innerHTML.replace(active, html)
+    // 0 = Drop/Click, 1 = Move
+    active = i ? html : html = 0
   }
 }
 
