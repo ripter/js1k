@@ -1,16 +1,31 @@
-// Apple Watch screen size!
+console.log('Coin Miner 2018');
+/*
+ * Apple Watch Game
+ * When a rock appears, tap to mine it and collect the coin.
+ * When a choice appears, tap left or right to take that path.
+ * Try to get the most coins!
+ */
 const WIDTH = 312;
 const HEIGHT = 390;
 const CENTER_X = WIDTH / 2;
 const CENTER_Y = HEIGHT / 2;
 const CAVE_WIDTH = 200;
-const CAVE_HEIGHT = CAVE_WIDTH + 25;
+const CAVE_HEIGHT = CAVE_WIDTH + 30;
 const CAVE_WIDTH_CENTER = CAVE_WIDTH/2;
 const CAVE_HEIGHT_CENTER = CAVE_HEIGHT/2;
 const FRAME_RATE = 250;
 
-console.log('Coin Miner 2018');
 let lastTimestamp = -FRAME_RATE;
+
+/*
+ * TODO:
+ *  handle taps/clicks
+ *  Render left/right choices
+ *  Render ore
+ *  Render Coin
+ *  Render Score
+ *  ✅ Render Cave
+ */
 
 function tick(timestamp = 0) {
   timestamp = 0 | timestamp; // round to milliseconds
@@ -40,23 +55,28 @@ function clearScreen() {
   c.fillRect(0, 0, WIDTH, HEIGHT);
 }
 
+// Render a 'cave' by carving out a rough opening in the rock.
+// The clear screen makes the entire screen "rock"
+// So to render the cave, we render empty space on top.
 function renderCave(time) {
-  c.beginPath();
+  let degree = 0;
+  let i = randomNumber(16, 4);
 
-  let i = randomNumber(8, 4);
+  c.beginPath();
   while (i--) {
-    renderCaveWall();
+    degree += randomNumber(25);
+    renderCaveWall(degree);
   }
+  c.closePath();
 
   c.fillStyle = '#000';
   c.fill();
-  c.closePath();
 }
 
-function renderCaveWall() {
+// Rendering the cave walls by cutting out chuncks of rotated walls.
+function renderCaveWall(degree) {
   const x = CENTER_X - CAVE_WIDTH_CENTER;
   const y = CENTER_Y - CAVE_HEIGHT_CENTER;
-  const degree = randomNumber(360);
 
   c.save();
   // How to rotate around the center: https://stackoverflow.com/a/17126036
