@@ -7,42 +7,50 @@ const CAVE_WIDTH = 200;
 const CAVE_HEIGHT = CAVE_WIDTH + 25;
 const CAVE_WIDTH_CENTER = CAVE_WIDTH/2;
 const CAVE_HEIGHT_CENTER = CAVE_HEIGHT/2;
+const FRAME_RATE = 250;
 
 console.log('Coin Miner 2018');
-clearScreen();
-// let lastTimestamp = 0;
+let lastTimestamp = -FRAME_RATE;
 
-void function tick(timestamp = 0) {
-  // const diff = 0| (timestamp - lastTimestamp);
-  // update the lastTimestamp now that we have the diff
-  // lastTimestamp = timestamp;
+function tick(timestamp = 0) {
   timestamp = 0 | timestamp; // round to milliseconds
-  console.log('tick', timestamp);
+  const diff = 0| (timestamp - lastTimestamp);
+  // console.log('tick', diff);
 
-  renderCave(timestamp);
+  if (diff >= FRAME_RATE) {
+    lastTimestamp = timestamp;
+
+    // c.save();
+    clearScreen();
+    renderCave();
+    // c.restore();
+  }
 
   // allow pausing for debugging.
   if (!window.pause){
-    // window.requestAnimationFrame(tick);
+    window.requestAnimationFrame(tick);
   }
-}();
+};
+tick();
 
 
 // clear the screen.
 function clearScreen() {
-  c.fillStyle = '#000';
+  c.fillStyle = '#725636';
   c.fillRect(0, 0, WIDTH, HEIGHT);
 }
 
 function renderCave(time) {
-  c.strokeStyle = 'rgb(255, 125, 0)';
+  c.beginPath();
 
-  let i = randomNumber(16);
+  let i = randomNumber(8, 4);
   while (i--) {
     renderCaveWall();
   }
 
-  c.stroke();
+  c.fillStyle = '#000';
+  c.fill();
+  c.closePath();
 }
 
 function renderCaveWall() {
