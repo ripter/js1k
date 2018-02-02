@@ -141,18 +141,18 @@
       // "press" reload button on orientation change?
       var TOKEN_RELOAD_ONORIENTATIONCHANGE = true;
     </script>
+
+
+    
     <script type="demo">
-      // THIS IS WHERE YOUR DEMO GOES
       console.log('demo here', window.a, b, window.c, window.g, window.d);
-      const WIDTH = 312;
-      const HEIGHT = 390;
-      c.fillStyle = '#F00';
-      c.fillRect(0, 0, WIDTH, HEIGHT);
-      // END
+      // Load script inside iframe
+      // That way it has proper context
+      const script = document.createElement('script');
+      script.src = 'index.js';
+      b.prepend(script);
+      // end load script
     </script>
-    <!-- LOAD DEMO -->
-    <script src="index.js"></script>
-    <!-- END LOAD DEMO -->
 
 
 
