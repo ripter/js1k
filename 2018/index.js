@@ -37,27 +37,20 @@ function tick(timestamp = 0) {
   if (diff >= FRAME_RATE) {
     lastTimestamp = timestamp;
     // clearScreen();
-    // c.save();
     c.drawImage(elRefrence, -159, 0);
-    // c.restore();
 
-    drawCross();
-
+    // drawCross();
     // drawBox(1, (WIDTH/2), 10, 100, 100);
-
     // drawBox(5, (WIDTH/2), 200, 100, 100);
 
-    // c.save();
-    // c.translate(0, -(WIDTH/3));
     c.strokeStyle = 'red';
     drawVanishing(0);
     c.strokeStyle = 'blue';
     drawVanishing(1);
     c.strokeStyle = 'green';
+    drawVanishing(2);
+    c.strokeStyle = 'orange';
     drawVanishing(3);
-    drawVanishing(4);
-    drawVanishing(5);
-    // c.restore();
 
     c.strokeStyle = 'black';
     c.strokeRect(0, 0, WIDTH, HEIGHT);
@@ -79,6 +72,7 @@ function randomNumber(max = 1, min = 0) {
   return 0| Math.random() * max + min;
 }
 
+// Draw a line at angle
 function lineAtAngle(x1, y1, length, angle) {
   angle *= Math.PI / 180;
 
@@ -103,7 +97,7 @@ function drawCross() {
 }
 
 function drawVanishing(distance = 0) {
-  const degree = (22.5 * distance) + 0;
+  const degree = (90 * distance);
   console.log('degree', degree);
   c.beginPath();
 
