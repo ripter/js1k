@@ -107,13 +107,26 @@ function drawVert(distance = 0) {
 
 function drawHorz(distance = 0) {
   // const size = (8.6 * distance);
-  const size = 10;
+  const size = 5;
   const FLOOR = 275;
   const offset = (distance * size);
   c.beginPath();
 
-  c.moveTo(0, FLOOR + offset);
-  c.lineTo(WIDTH, FLOOR + offset);
+  const point1 = project({
+    x: 0,
+    z: FLOOR + offset,
+    y: distance * size,
+  });
+  // c.moveTo(0, FLOOR + offset);
+  c.moveTo(point1.x, point1.y);
+
+  const point2 = project({
+    x: WIDTH,
+    z: FLOOR + offset,
+    y: distance * size,
+  });
+  // c.lineTo(WIDTH, FLOOR + offset);
+  c.lineTo(point2.x, point2.y);
 
   // lineAtAngle(0, HEIGHT - (distance * size), WIDTH, 0);
   // The horizontal lines get closer as we get closer to the vanishing point.
@@ -130,4 +143,20 @@ function drawHorz(distance = 0) {
 
   c.closePath();
   c.stroke();
+}
+
+/**
+ * Project a 3d object onto a 2d plane
+ * https://www.sitepoint.com/building-3d-engine-javascript/
+ * @param  {Number} d Distance between the camera and the plane
+ * @return {Object} 2d point
+ */
+function project(vertex) {
+  const d = 7;
+  const r = d / vertex.y;
+
+  return {
+    x: r * vertex.x,
+    y: r * vertex.z,
+  };
 }
