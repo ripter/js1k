@@ -24,11 +24,11 @@ function drawTrack() {
   });
   c.beginPath();
   // Left rail
-  c.moveTo(125, 215);
-  c.lineTo(70, HEIGHT);
+  // c.moveTo(125, 215);
+  // c.lineTo(70, HEIGHT);
   // Left rail
-  c.moveTo(190, 215);
-  c.lineTo(245, HEIGHT);
+  // c.moveTo(190, 215);
+  // c.lineTo(245, HEIGHT);
   // draw all the planks
   planks.forEach((plank) => drawSquare(plank));
   c.fill();
@@ -106,12 +106,14 @@ function tick(timestamp = 0) {
 
   if (diff >= FRAME_RATE) {
     lastTimestamp = timestamp;
-    // clearScreen();
-    c.drawImage(elRefrence, -159, -60);
+    clearScreen();
+    // c.drawImage(elRefrence, -159, -60);
 
     c.strokeStyle = 'red';
     c.fillStyle = 'orange';
 
+    c.strokeStyle = '#392b1b';
+    c.fillStyle = '#392b1b';// '#7c8485';
     drawTrack();
 
     c.strokeStyle = 'green';
