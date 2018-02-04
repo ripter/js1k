@@ -16,82 +16,21 @@ console.log('Coin Miner 2018');
 
 
 function drawTrack() {
-  const left1 = [125, 215];
-  const left2 = [70, HEIGHT];
-  const right1 = [190, 215];
-  const right2 = [245, HEIGHT];
+  let planks = TRACK_PLANKS.filter((_, index) => {
+    if (frame % 2 === 0) {
+      return index % 2 === 0;
+    }
+    return index % 2 !== 0;
+  });
   c.beginPath();
-
   // Left rail
-  c.moveTo(left1[0], left1[1]);
-  c.lineTo(left2[0], left2[1]);
-
+  c.moveTo(125, 215);
+  c.lineTo(70, HEIGHT);
   // Left rail
-  c.moveTo(right1[0], right1[1]);
-  c.lineTo(right2[0], right2[1]);
-
-
-  // tracks
-  const depth = 4;
-
-  // track 0
-  // for(let i=0; i < 8; i += 2) {
-  //   c.moveTo(left1[0]  - (i*4),   (left1[1]  + (depth*i)) );
-  //   c.lineTo(right1[0] + (i*4),   (right1[1] + (depth*i)) ); // top
-  //   c.lineTo(right1[0] + ((i+1)*4), (right1[1] + (depth*(i+1))) + ((i+1)*4)); // right
-  //   c.lineTo(left1[0]  - ((i+1)*4), (right1[1] + (depth*(i+1))) + ((i+1)*4)); // bottom
-  //   c.lineTo(left1[0]  - (i*4),   (left1[1]  + (depth*i)) ); // left
-  // }
-
-  // track 0
-  drawSquare([
-    left1[0], left1[1],
-    right1[0], right1[1],
-    right1[0] + 4, right1[1] + 8,
-    left1[0]  - 4, right1[1] + 8,
-  ]);
-
-  // track 1
-  drawSquare([
-    left1[0]  - 4, left1[1]  + 16,
-    right1[0] + 4, right1[1] + 16,
-    right1[0] + 8, right1[1] + 24,
-    left1[0]  - 8, right1[1] + 24,
-  ]);
-
-  // track 2
-  drawSquare([
-    left1[0]  - 11, left1[1]  + 32,
-    right1[0] + 11, right1[1] + 32,
-    right1[0] + 15, right1[1] + 44,
-    left1[0]  - 15, right1[1] + 44,
-  ]);
-
-  // track 3
-  drawSquare([
-    left1[0]  - 19, left1[1]  + 58,
-    right1[0] + 19, right1[1] + 58,
-    right1[0] + 22, right1[1] + 70,
-    left1[0]  - 22, right1[1] + 70,
-  ]);
-
-  // track 4
-  drawSquare([
-    left1[0]  - 29, left1[1]  + 90,
-    right1[0] + 29, right1[1] + 90,
-    right1[0] + 35, right1[1] + 112,
-    left1[0]  - 35, right1[1] + 112,
-  ]);
-
-  // track 5
-  drawSquare([
-    left1[0]  - 45, left1[1]  + 140,
-    right1[0] + 45, right1[1] + 140,
-    right1[0] + 55, right1[1] + 175,
-    left1[0]  - 55, right1[1] + 175,
-  ]);
-
-
+  c.moveTo(190, 215);
+  c.lineTo(245, HEIGHT);
+  // draw all the planks
+  planks.forEach((plank) => drawSquare(plank));
   c.fill();
   c.stroke();
 }
@@ -200,3 +139,77 @@ function clearScreen() {
   c.fillStyle = '#725636';
   c.fillRect(0, 0, WIDTH, HEIGHT);
 }
+
+
+
+//
+// Data
+//
+const TRACK_PLANKS = [
+  [ // 0
+    125 - 0, 215 + 0,
+    190 + 0, 215 + 0,
+    190 + 3, 215 + 8,
+    125 - 3, 215 + 8,
+  ],
+  [ // 1
+    125 - 3, 215 + 8,
+    190 + 3, 215 + 8,
+    190 + 5, 215 + 16,
+    125 - 5, 215 + 16,
+  ],
+  [ // 2
+    125 - 5, 215 + 16,
+    190 + 5, 215 + 16,
+    190 + 8, 215 + 24,
+    125 - 8, 215 + 24,
+  ],
+  [ // 3
+    125 - 8, 215 + 24,
+    190 + 8, 215 + 24,
+    190 + 11, 215 + 32,
+    125 - 11, 215 + 32,
+  ],
+  [ // 4
+    125 - 11, 215 + 32,
+    190 + 11, 215 + 32,
+    190 + 15, 215 + 44,
+    125 - 15, 215 + 44,
+  ],
+  [ // 5
+    125 - 15, 215 + 44,
+    190 + 15, 215 + 44,
+    190 + 19, 215 + 58,
+    125 - 19, 215 + 58,
+  ],
+  [ // 6
+    125 - 19, 215 + 58,
+    190 + 19, 215 + 58,
+    190 + 22, 215 + 70,
+    125 - 22, 215 + 70,
+  ],
+  [ // 7
+    125 - 22, 215 + 70,
+    190 + 22, 215 + 70,
+    190 + 29, 215 + 90,
+    125 - 29, 215 + 90,
+  ],
+  [ // 8
+    125 - 29, 215 + 90,
+    190 + 29, 215 + 90,
+    190 + 35, 215 + 112,
+    125 - 35, 215 + 112,
+  ],
+  [ // 9
+    125 - 35, 215 + 112,
+    190 + 35, 215 + 112,
+    190 + 45, 215 + 140,
+    125 - 45, 215 + 140,
+  ],
+  [ // 10
+    125 - 45, 215 + 140,
+    190 + 45, 215 + 140,
+    190 + 55, 215 + 175,
+    125 - 55, 215 + 175,
+  ],
+];
