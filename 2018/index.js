@@ -215,18 +215,26 @@ function renderCave() {
   c.beginPath();
   while (i--) {
     degree += randomNumber(25);
-    renderCaveWall(degree);
+    renderCaveWall(degree, i);
   }
   c.closePath();
+
+  // draw a floor
+  drawSquare([
+    28, 210,
+    280, 210,
+    280, HEIGHT,
+    28, HEIGHT,
+  ]);
 
   c.fillStyle = '#000';
   c.fill();
 }
 
 // Rendering the cave walls by cutting out chuncks of rotated walls.
-function renderCaveWall(degree) {
+function renderCaveWall(degree, depth) {
   const x = (WIDTH/2) - CAVE_WIDTH_CENTER;
-  const y = (HEIGHT/2) - CAVE_HEIGHT_CENTER;
+  const y = (HEIGHT/2) - CAVE_HEIGHT_CENTER + (depth * 10);
 
   c.save();
   // How to rotate around the center: https://stackoverflow.com/a/17126036
@@ -244,3 +252,9 @@ function randomNumber(max = 1, min = 0) {
 
 // Start Game
 tick();
+
+
+// DEBUG
+a.addEventListener('click', (event) => {
+  console.log(event);
+});
