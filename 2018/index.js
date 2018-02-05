@@ -14,28 +14,49 @@ let frame = 0;
 let lastTimestamp = -FRAME_RATE;
 console.log('Coin Miner 2018');
 
+// window.pause = true;
 
-function drawTrack() {
-  let planks = TRACK_PLANKS.filter((_, index) => {
-    if (frame % 2 === 0) {
-      return index % 2 === 0;
-    }
-    return index % 2 !== 0;
-  });
+function renderCoin() {
+  if (frame < 4) { return; }
+  let x = 150;
+  let y = 160;
+  const radius = 40;
+  const frames = [
+  //  x,   y, scale
+    157, 210, 1,
+    157, 210 + 25, 2,
+    157, 210 + 75, 4,
+    157, 210 + 100, 7,
+  ];
+
+  let index = (frame - 4) * 3;
+  drawCoin(frames[index], frames[index+1], frames[index+2]);
+  // for(let i=0; i < frames.length; i += 3) {
+  //   drawCoin(frames[i], frames[i+1], frames[i+2]);
+  // }
+}
+
+function drawCoin(x, y, scale) {
+  const radius = 10 * scale;
+  c.font = `${12*scale}px serif`;
+
   c.beginPath();
-  // Left rail
-  // c.moveTo(125, 215);
-  // c.lineTo(70, HEIGHT);
-  // Left rail
-  // c.moveTo(190, 215);
-  // c.lineTo(245, HEIGHT);
-  // draw all the planks
-  planks.forEach((plank) => drawSquare(plank));
-  c.fill();
+  c.arc(x, y, radius, 0, 2 * Math.PI, false);
   c.stroke();
+
+  c.beginPath();
+  c.arc(x, y, (radius - 5), 0, 2 * Math.PI, false);
+  c.stroke();
+
+  c.fillText('¢', x - (3*scale), y + (3*scale));
 }
 
 
+
+/**
+ * Draws a square from an array of points.
+ * @param  {Array} points - Array of numbers, each pair a point. Total 8 numbers.
+ */
 function drawSquare(points) {
   c.moveTo(points[0], points[1]);
   c.lineTo(points[2], points[3]);
@@ -106,15 +127,18 @@ function tick(timestamp = 0) {
 
   if (diff >= FRAME_RATE) {
     lastTimestamp = timestamp;
-    clearScreen();
-    // c.drawImage(elRefrence, -159, -60);
+    // clearScreen();
+    c.drawImage(elRefrence, -159, -60);
+
+
+    c.strokeStyle = '#392b1b';
+    c.fillStyle = '#392b1b';
+    drawTrack();
+
 
     c.strokeStyle = 'red';
     c.fillStyle = 'orange';
-
-    c.strokeStyle = '#392b1b';
-    c.fillStyle = '#392b1b';// '#7c8485';
-    drawTrack();
+    renderCoin();
 
     c.strokeStyle = 'green';
 
@@ -143,12 +167,29 @@ function clearScreen() {
 }
 
 
+/**
+ * Draws a track moving twords the camera
+ */
+function drawTrack() {
+  // alternate rendering even/odd planks
+  const planks = TRACK_PLANKS.filter((_, index) => {
+    if (frame % 2 === 0) {
+      return index % 2 === 0;
+    }
+    return index % 2 !== 0;
+  });
+  c.beginPath();
+  planks.forEach((plank) => drawSquare(plank));
+  c.fill();
+  c.stroke();
+}
 
 //
 // Data
 //
 const TRACK_PLANKS = [
   [ // 0
+  //      x,       y,
     125 - 0, 215 + 0,
     190 + 0, 215 + 0,
     190 + 3, 215 + 8,
