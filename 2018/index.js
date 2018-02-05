@@ -10,11 +10,11 @@ const WIDTH = 312;
 const HEIGHT = 390;
 const FRAME_LENGTH = 8;
 const FRAME_RATE = 250;
-let frame = 0;
+let frame = 7;
 let lastTimestamp = -FRAME_RATE;
 console.log('Coin Miner 2018');
 
-// window.pause = true;
+window.pause = true;
 
 function renderCoin() {
   if (frame < 4) { return; }
@@ -24,9 +24,9 @@ function renderCoin() {
   const frames = [
   //  x,   y, scale
     157, 210, 1,
-    157, 210 + 25, 2,
-    157, 210 + 75, 4,
-    157, 210 + 100, 7,
+    157, 210 + 35, 2,
+    157, 210 + 70, 4,
+    157, 210 + 60, 7,
   ];
 
   let index = (frame - 4) * 3;
@@ -38,16 +38,23 @@ function renderCoin() {
 
 function drawCoin(x, y, scale) {
   const radius = 10 * scale;
-  c.font = `${12*scale}px serif`;
+
+
+  // c.beginPath();
+  // c.arc(x, y, (radius - 5), 0, 2 * Math.PI, false);
+  // c.stroke();
 
   c.beginPath();
   c.arc(x, y, radius, 0, 2 * Math.PI, false);
+  c.strokeStyle = '#392b1b'; // darkest
   c.stroke();
 
-  c.beginPath();
-  c.arc(x, y, (radius - 5), 0, 2 * Math.PI, false);
-  c.stroke();
+  c.fillStyle = '#f0f0b5'; // lightest
+  c.fill();
 
+  // c.fillStyle = 'black';
+  c.fillStyle = '#392b1b'; // darkest
+  c.font = `${12*scale}px serif`;
   c.fillText('¢', x - (3*scale), y + (3*scale));
 }
 
@@ -105,6 +112,9 @@ document.addEventListener('keyup', function(event) {
     case 's':
       window.Y -= 1;
       break;
+    case 'Enter':
+      window.requestAnimationFrame(tick);
+      break;
     default:
       // noting
   }
@@ -127,8 +137,8 @@ function tick(timestamp = 0) {
 
   if (diff >= FRAME_RATE) {
     lastTimestamp = timestamp;
-    // clearScreen();
-    c.drawImage(elRefrence, -159, -60);
+    clearScreen();
+    // c.drawImage(elRefrence, -159, -60);
 
 
     c.strokeStyle = '#392b1b';
@@ -137,7 +147,7 @@ function tick(timestamp = 0) {
 
 
     c.strokeStyle = 'red';
-    c.fillStyle = 'orange';
+    c.fillStyle = '#7c8485';
     renderCoin();
 
     c.strokeStyle = 'green';
