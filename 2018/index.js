@@ -176,4 +176,3 @@ function renderTrack() {
 
 // Start Game
 tick();
-// DEBUG
