@@ -108,6 +108,14 @@ function clearScreen() {
   c.fillRect(0, 0, WIDTH, HEIGHT);
 }
 
+function renderCave() {
+  c.beginPath();
+  c.arc(WIDTH/2, HEIGHT/2, WIDTH/2, 0, 1 * Math.PI, true);
+  c.rect(0, HEIGHT/2, WIDTH, HEIGHT/2);
+
+  c.fillStyle = '#000';
+  c.fill();
+}
 
 /**
  * Draws a track moving twords the camera
@@ -120,8 +128,15 @@ function drawTrack() {
     }
     return index % 2 !== 0;
   });
+
   c.beginPath();
-  planks.forEach((plank) => drawSquare(plank));
+  planks.forEach((points) => {
+    c.moveTo(points[0], points[1]);
+    c.lineTo(points[2], points[3]);
+    c.lineTo(points[4], points[5]);
+    c.lineTo(points[6], points[7]);
+    c.lineTo(points[0], points[1]);
+  });
   c.fill();
   c.stroke();
 }
@@ -201,49 +216,6 @@ const TRACK_PLANKS = [
 
 
 
-const CAVE_WIDTH = 200;
-const CAVE_HEIGHT = CAVE_WIDTH + 30;
-const CAVE_WIDTH_CENTER = CAVE_WIDTH/2;
-const CAVE_HEIGHT_CENTER = CAVE_HEIGHT/2;
-// Render a 'cave' by carving out a rough opening in the rock.
-// The clear screen makes the entire screen "rock"
-// So to render the cave, we render empty space on top.
-function renderCave() {
-  let degree = 0;
-  let i = randomNumber(16, 4);
-
-  c.beginPath();
-  while (i--) {
-    degree += randomNumber(25);
-    renderCaveWall(degree, i);
-  }
-  c.closePath();
-
-  // draw a floor
-  drawSquare([
-    28, 210,
-    280, 210,
-    280, HEIGHT,
-    28, HEIGHT,
-  ]);
-
-  c.fillStyle = '#000';
-  c.fill();
-}
-
-// Rendering the cave walls by cutting out chuncks of rotated walls.
-function renderCaveWall(degree, depth) {
-  const x = (WIDTH/2) - CAVE_WIDTH_CENTER;
-  const y = (HEIGHT/2) - CAVE_HEIGHT_CENTER + (depth * 10);
-
-  c.save();
-  // How to rotate around the center: https://stackoverflow.com/a/17126036
-  c.translate(x + CAVE_WIDTH_CENTER, y + CAVE_HEIGHT_CENTER);
-  c.rotate(degree * Math.PI / 180);
-  c.rect(-CAVE_WIDTH_CENTER, -CAVE_HEIGHT_CENTER, CAVE_WIDTH, CAVE_HEIGHT);
-  c.restore();
-}
-
 function randomNumber(max = 1, min = 0) {
   return 0| Math.random() * max + min;
 }
@@ -252,8 +224,6 @@ function randomNumber(max = 1, min = 0) {
 
 // Start Game
 tick();
-
-
 // DEBUG
 a.addEventListener('click', (event) => {
   console.log(event);
