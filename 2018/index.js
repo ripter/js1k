@@ -121,103 +121,42 @@ function renderCave() {
  * Draws a track moving twords the camera
  */
 function drawTrack() {
+  const x1 = 125;
+  const x2 = 190;
+  const y = 215;
+  let points = [
+    [ 0, 0, 3, 8 ],
+    [ 3, 8, 5, 16 ],
+    [ 5, 16, 8, 24 ],
+    [ 8, 24, 11, 32 ],
+    [ 11, 32, 15, 44 ],
+    [ 15, 44, 19, 58 ],
+    [ 19, 58, 22, 70 ],
+    [ 22, 70, 29, 90 ],
+    [ 29, 90, 35, 112 ],
+    [ 35, 112, 45, 140 ],
+    [ 45, 140, 55, 175 ],
+  ];
+
   // alternate rendering even/odd planks
-  const planks = TRACK_PLANKS.filter((_, index) => {
+  points = points.filter((_, index) => {
     if (frame % 2 === 0) {
       return index % 2 === 0;
     }
     return index % 2 !== 0;
   });
 
+  // Draw each rectangle
   c.beginPath();
-  planks.forEach((points) => {
-    c.moveTo(points[0], points[1]);
-    c.lineTo(points[2], points[3]);
-    c.lineTo(points[4], points[5]);
-    c.lineTo(points[6], points[7]);
-    c.lineTo(points[0], points[1]);
+  points.forEach((offset) => {
+    c.moveTo(x1 - offset[0], y + offset[1]);
+    c.lineTo(x2 + offset[0], y + offset[1]);
+    c.lineTo(x2 + offset[2], y + offset[3]);
+    c.lineTo(x1 - offset[2], y + offset[3]);
+    c.lineTo(x1 - offset[0], y + offset[1]);
   });
   c.fill();
   c.stroke();
-}
-
-//
-// Data
-//
-// Each Array is x,y points for a rect
-const TRACK_PLANKS = [
-  [ // 0
-    125 - 0, 215 + 0,
-    190 + 0, 215 + 0,
-    190 + 3, 215 + 8,
-    125 - 3, 215 + 8,
-  ],
-  [ // 1
-    125 - 3, 215 + 8,
-    190 + 3, 215 + 8,
-    190 + 5, 215 + 16,
-    125 - 5, 215 + 16,
-  ],
-  [ // 2
-    125 - 5, 215 + 16,
-    190 + 5, 215 + 16,
-    190 + 8, 215 + 24,
-    125 - 8, 215 + 24,
-  ],
-  [ // 3
-    125 - 8, 215 + 24,
-    190 + 8, 215 + 24,
-    190 + 11, 215 + 32,
-    125 - 11, 215 + 32,
-  ],
-  [ // 4
-    125 - 11, 215 + 32,
-    190 + 11, 215 + 32,
-    190 + 15, 215 + 44,
-    125 - 15, 215 + 44,
-  ],
-  [ // 5
-    125 - 15, 215 + 44,
-    190 + 15, 215 + 44,
-    190 + 19, 215 + 58,
-    125 - 19, 215 + 58,
-  ],
-  [ // 6
-    125 - 19, 215 + 58,
-    190 + 19, 215 + 58,
-    190 + 22, 215 + 70,
-    125 - 22, 215 + 70,
-  ],
-  [ // 7
-    125 - 22, 215 + 70,
-    190 + 22, 215 + 70,
-    190 + 29, 215 + 90,
-    125 - 29, 215 + 90,
-  ],
-  [ // 8
-    125 - 29, 215 + 90,
-    190 + 29, 215 + 90,
-    190 + 35, 215 + 112,
-    125 - 35, 215 + 112,
-  ],
-  [ // 9
-    125 - 35, 215 + 112,
-    190 + 35, 215 + 112,
-    190 + 45, 215 + 140,
-    125 - 45, 215 + 140,
-  ],
-  [ // 10
-    125 - 45, 215 + 140,
-    190 + 45, 215 + 140,
-    190 + 55, 215 + 175,
-    125 - 55, 215 + 175,
-  ],
-];
-
-
-
-function randomNumber(max = 1, min = 0) {
-  return 0| Math.random() * max + min;
 }
 
 
