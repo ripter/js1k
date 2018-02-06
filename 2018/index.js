@@ -13,9 +13,26 @@ const FRAME_RATE = 250;
 let score = 0;
 let frame = 0;
 let lastTimestamp = -FRAME_RATE;
+let isKeyDown = false;
 console.log('Coin Miner 2018');
 
 // window.pause = true;
+a.addEventListener('click', (event) => {
+  console.log(event);
+  isKeyDown = true;
+});
+
+function handleInput() {
+  if (frame === 0 && isKeyDown) {
+    // console.log('Score!')
+    score += 1;
+  }
+  else if (isKeyDown) {
+    // console.log('Miss: frame was:', frame);
+  }
+
+  isKeyDown = false;
+}
 
 
 function renderScore() {
@@ -49,12 +66,11 @@ function drawCoin(x, y, scale) {
   const radius = 10 * scale;
 
   c.beginPath();
+  c.strokeStyle = '#7c8485';
+  c.fillStyle = '#f0f0b5';
   c.arc(x, y, radius, 0, 2 * Math.PI, false);
-  c.strokeStyle = '#392b1b'; // darkest
-  c.stroke();
-
-  c.fillStyle = '#f0f0b5'; // lightest
   c.fill();
+  c.stroke();
 
   c.fillStyle = '#392b1b'; // darkest
   c.font = `${12*scale}px serif`;
@@ -80,6 +96,8 @@ function tick(timestamp = 0) {
 
     c.strokeStyle = '#392b1b';
     c.fillStyle = '#392b1b';
+
+    handleInput();
     renderTrack();
     renderCoin();
     renderScore();
@@ -159,6 +177,3 @@ function renderTrack() {
 // Start Game
 tick();
 // DEBUG
-a.addEventListener('click', (event) => {
-  console.log(event);
-});
