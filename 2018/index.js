@@ -10,11 +10,19 @@ const WIDTH = 312;
 const HEIGHT = 390;
 const FRAME_LENGTH = 8;
 const FRAME_RATE = 250;
+let score = 0;
 let frame = 0;
 let lastTimestamp = -FRAME_RATE;
 console.log('Coin Miner 2018');
 
 // window.pause = true;
+
+
+function renderScore() {
+  c.font = '24px monospace';
+  c.fillStyle = '#f0f0b5';// 'white';
+  c.fillText(`Coins: ${score}`, 10, 24);
+}
 
 /**
  * Renders the coin based on global frame
@@ -54,19 +62,6 @@ function drawCoin(x, y, scale) {
 }
 
 
-
-/**
- * Draws a square from an array of points.
- * @param  {Array} points - Array of numbers, each pair a point. Total 8 numbers.
- */
-function drawSquare(points) {
-  c.moveTo(points[0], points[1]);
-  c.lineTo(points[2], points[3]);
-  c.lineTo(points[4], points[5]);
-  c.lineTo(points[6], points[7]);
-  c.lineTo(points[0], points[1]);
-}
-
 /**
  * Game Loop.
  * Self calling.
@@ -85,9 +80,9 @@ function tick(timestamp = 0) {
 
     c.strokeStyle = '#392b1b';
     c.fillStyle = '#392b1b';
-    drawTrack();
-
+    renderTrack();
     renderCoin();
+    renderScore();
 
     // Update the animation Frame
     frame += 1;
@@ -120,7 +115,7 @@ function renderCave() {
 /**
  * Draws a track moving twords the camera
  */
-function drawTrack() {
+function renderTrack() {
   const x1 = 125;
   const x2 = 190;
   const y = 215;
