@@ -26,8 +26,11 @@ a.addEventListener('click', (event) => {
 
 function updateScore() {
   // reset in two frames
-  if (didScore) {
+  if (didScore > 0) {
     didScore -= 1;
+  }
+  else if (didScore < 0) {
+    didScore += 1;
   }
 
   //TODO: real score handling
@@ -35,6 +38,11 @@ function updateScore() {
     // console.log('Score!')
     score += 1;
     didScore = 3; // last for 3 frames
+  }
+  else if (frame === 4 && isKeyDown) {
+    // console.log('Score!')
+    score -= 1;
+    didScore = -3; // last for 3 frames
   }
 
   // reset isKeyDown every frame.
@@ -47,8 +55,11 @@ function renderScore() {
   c.font = '24px monospace';
   c.fillStyle = '#f0f0b5';
 
-  if (didScore) {
+  if (didScore > 0) {
     c.fillText(`*** Collected  1¢ ***`, 3, 24);
+  }
+  else if (didScore < 0) {
+    c.fillText(`*** Ouch! Lost 1¢ ***`, 3, 24);
   }
   else {
     c.fillText(`Coins: ${score}`, 10, 24);
@@ -205,7 +216,6 @@ function tick(timestamp = 0) {
     renderTrack();
 
     renderCoin();
-
     renderBomb();
 
     renderScore();
