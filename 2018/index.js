@@ -23,6 +23,10 @@ a.addEventListener('click', (event) => {
   console.log(event);
   isKeyDown = true;
 });
+a.addEventListener('touchend', (event) => {
+  console.log(event);
+  isKeyDown = true;
+});
 
 function updateScore() {
   // reset in two frames
@@ -88,22 +92,11 @@ function renderCoin() {
 
 // Draws a coint at location and scale
 function drawCoin(x, y, scale) {
-  const radius = 10 * scale;
-
-  c.beginPath();
-  c.strokeStyle = '#7c8485';
-  c.fillStyle = '#f0f0b5';
-  c.arc(x, y, radius, 0, 2 * Math.PI, false);
-  c.fill();
-  c.stroke();
-
-  c.fillStyle = '#392b1b'; // darkest
   c.font = `${12*scale}px serif`;
-  c.fillText('¢', x - (3*scale), y + (3*scale));
+  c.fillText('💎', x - (3*scale), y + (3*scale));
 }
 
 function renderBomb() {
-  const radius = 40;
   const frames = [
   //  x,   y, scale
     155, 215, 1,
@@ -113,21 +106,11 @@ function renderBomb() {
   ];
   if (frame >= frames.length) { return; }
 
-  // let index = (frame - 4) * 3;
   const index = frame * 3;
   drawBomb(frames[index], frames[index+1], frames[index+2]);
 }
 
 function drawBomb(x, y, scale) {
-  // const radius = 10 * scale;
-  //
-  // c.beginPath();
-  // c.strokeStyle = '#7c8485';
-  // c.fillStyle = '#f0f0b5';
-  // c.arc(x, y, radius, 0, 2 * Math.PI, false);
-  // c.fill();
-  // c.stroke();
-
   c.fillStyle = '#392b1b'; // darkest
   c.font = `${12*scale}px serif`;
   c.fillText('💣', x - (3*scale), y + (3*scale));
