@@ -12,6 +12,7 @@ const FRAME_LENGTH = 8;
 const FRAME_RATE = 250;
 let score = 0;
 let frame = 0;
+// let frame = 3;
 let lastTimestamp = -FRAME_RATE;
 let isKeyDown = false;
 let didScore = 0;
@@ -90,43 +91,38 @@ function drawCoin(x, y, scale) {
   c.fillText('¢', x - (3*scale), y + (3*scale));
 }
 
+function renderBomb() {
+  const radius = 40;
+  const frames = [
+  //  x,   y, scale
+    155, 215, 1,
+    155, 215 + 20, 2,
+    155, 215 + 50, 4,
+    140, 215 + 100, 9,
+  ];
+  if (frame >= frames.length) { return; }
 
-/**
- * Game Loop.
- * Self calling.
- * @param  {Number} [timestamp=0] [description]
- */
-function tick(timestamp = 0) {
-  timestamp = 0 | timestamp; // round to milliseconds
-  const diff = 0| (timestamp - lastTimestamp);
-  // console.log('tick', diff);
+  // let index = (frame - 4) * 3;
+  const index = frame * 3;
+  drawBomb(frames[index], frames[index+1], frames[index+2]);
+}
 
-  if (diff >= FRAME_RATE) {
-    lastTimestamp = timestamp;
-    clearScreen();
-    // c.drawImage(elRefrence, -159, -60);
-    renderCave();
+function drawBomb(x, y, scale) {
+  // const radius = 10 * scale;
+  //
+  // c.beginPath();
+  // c.strokeStyle = '#7c8485';
+  // c.fillStyle = '#f0f0b5';
+  // c.arc(x, y, radius, 0, 2 * Math.PI, false);
+  // c.fill();
+  // c.stroke();
 
-    c.strokeStyle = '#392b1b';
-    c.fillStyle = '#392b1b';
+  c.fillStyle = '#392b1b'; // darkest
+  c.font = `${12*scale}px serif`;
+  c.fillText('💣', x - (3*scale), y + (3*scale));
+}
 
-    updateScore();
-    renderTrack();
-    renderCoin();
-    renderScore();
 
-    // Update the animation Frame
-    frame += 1;
-    if (frame === FRAME_LENGTH) {
-      frame = 0;
-    }
-  }
-
-  // allow pausing for debugging.
-  if (!window.pause){
-    window.requestAnimationFrame(tick);
-  }
-};
 
 // clear the screen.
 function clearScreen() {
@@ -186,6 +182,46 @@ function renderTrack() {
 }
 
 
+/**
+ * Game Loop.
+ * Self calling.
+ * @param  {Number} [timestamp=0] [description]
+ */
+function tick(timestamp = 0) {
+  timestamp = 0 | timestamp; // round to milliseconds
+  const diff = 0| (timestamp - lastTimestamp);
+  // console.log('tick', diff);
+
+  if (diff >= FRAME_RATE) {
+    lastTimestamp = timestamp;
+    clearScreen();
+    // c.drawImage(elRefrence, -159, -60);
+    renderCave();
+
+    c.strokeStyle = '#392b1b';
+    c.fillStyle = '#392b1b';
+
+    updateScore();
+    renderTrack();
+
+    renderCoin();
+
+    renderBomb();
+
+    renderScore();
+
+    // Update the animation Frame
+    frame += 1;
+    if (frame === FRAME_LENGTH) {
+      frame = 0;
+    }
+  }
+
+  // allow pausing for debugging.
+  if (!window.pause){
+    window.requestAnimationFrame(tick);
+  }
+};
 
 // Start Game
 tick();
