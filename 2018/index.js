@@ -10,6 +10,11 @@ const WIDTH = 312;
 const HEIGHT = 390;
 const FRAME_LENGTH = 8;
 const FRAME_RATE = 250;
+// Vanishing Point
+const VPOINT = {
+  X: 157,
+  Y: 215,
+}
 const NONE = 0;
 const COIN = 1;
 const BOMB = 2;
@@ -107,6 +112,40 @@ function renderCoin() {
   // console.log('index', index, 'delayTime', delayTime, 'frame', frame, 'length', frames.length);
   index *= 3;
   drawCoin(frames[index], frames[index+1], frames[index+2]);
+}
+
+function drawPlank(p, distance) {
+  const height = 10;
+  const halfHeight = height/2;
+  const width = 65;
+  const halfWidth = width/2;
+  const x1 = VPOINT.X - halfWidth; // top,left
+  const x2 = VPOINT.X + halfWidth; // top,right
+  // const xp1 = p[0];
+  // const xp2 = p[2];
+  // const topOffset = 0| (distance * 2.7) + (distance / 1.7);
+  const topOffset = 0| (distance * 2.7);
+  const bottomOffset = 0| topOffset + ((distance+1) * 0.8);
+  console.group('plank', distance);
+  // console.log('distance', [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1].map((percent) => {
+  // console.log('distance', [0.0, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 0.99, 1.0].map((percent) => {
+    // return 0| (distance * (percent+2.5));// + 2
+    // return 0| (distance * (percent + 2.5)) + (distance / (percent + 1.5));// + 2
+  // }))
+  console.log('original topOffset', p[0]);
+  console.log('topOffset', topOffset, p[0]);
+  console.log('bottomOffset', bottomOffset, p[2]);
+  console.groupEnd();
+
+
+  c.beginPath();
+  c.moveTo(x1 - topOffset, VPOINT.Y + p[1]); // move to top, left corner
+  c.lineTo(x2 + topOffset, VPOINT.Y + p[1]); // draw line to top, right corner
+  c.lineTo(x2 + bottomOffset, VPOINT.Y + p[3]); // draw line to bottom, right corner
+  c.lineTo(x1 - bottomOffset, VPOINT.Y + p[3]); // draw line to bottom, left corner
+  c.lineTo(x1 - topOffset, VPOINT.Y + p[1]); // draw line to top, left corner
+  c.fill();
+  c.stroke();
 }
 
 // Draws a coint at location and scale
@@ -219,7 +258,7 @@ function tick(timestamp = 0) {
   // console.log('tick', diff);
 
   if (diff >= FRAME_RATE) {
-    console.log('%cframe', 'color: #ddd;', frame, 'activeType', activeType);
+    console.log('%cframe', 'color: #ddd;', frame);
     lastTimestamp = timestamp;
 
     clearScreen();
@@ -234,8 +273,8 @@ function tick(timestamp = 0) {
     else {
       // activeType is BOMB or Coin
       if (activeType) {
-        renderCoin();
-        renderBomb();
+        // renderCoin();
+        // renderBomb();
       }
       else if (Math.random() > .5) {
         activeType = COIN;
@@ -248,6 +287,53 @@ function tick(timestamp = 0) {
         console.log('set activeType = BOMB', activeType, delayTime);
       }
     }
+
+
+
+    // DEBUG
+  [
+    [ 0, 0, 3, 8 ],
+    [ 3, 8, 5, 16 ],
+    [ 5, 16, 8, 24 ],
+    [ 8, 24, 11, 32 ],
+    [ 11, 32, 15, 44 ],
+    [ 15, 44, 19, 58 ],
+    [ 19, 58, 22, 70 ],
+    [ 22, 70, 29, 90 ],
+    [ 29, 90, 35, 112 ],
+    [ 35, 112, 45, 140 ],
+    [ 45, 140, 55, 175 ],
+  ].forEach((p, i) => {
+    const height = 10;
+
+
+    // hacky way to only render on frame without point the points in a var
+    if (i === frame) {
+      // draw plank
+      c.fillStyle = 'green';
+      c.strokeStyle = 'red';
+
+      drawPlank(p, i);
+      // c.beginPath();
+      // c.moveTo(x1 - p[0], VPOINT.Y + p[1]); // move to top, left corner
+      // c.lineTo(x2 + p[0], VPOINT.Y + p[1]); // draw line to top, right corner
+      // c.lineTo(x2 + p[2], VPOINT.Y + p[3]); // draw line to bottom, right corner
+      // c.lineTo(x1 - p[2], VPOINT.Y + p[3]); // draw line to bottom, left corner
+      // c.lineTo(x1 - p[0], VPOINT.Y + p[1]); // draw line to top, left corner
+      // c.fill();
+      // c.stroke();
+
+
+      let x = VPOINT.X - (p[0]/2);
+      let y = VPOINT.Y + p[1] - height;
+      drawBomb(x, y, i);
+      // drawCoin(VPOINT.X, VPOINT.Y + p[3], i);
+    }
+  });
+
+
+
+    // END DEBUG
 
 
     // Update the animation Frame
