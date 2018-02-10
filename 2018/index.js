@@ -10,6 +10,9 @@ const WIDTH = 312;
 const HEIGHT = 390;
 const FRAME_LENGTH = 8;
 const FRAME_RATE = 250;
+const NONE = 0;
+const COIN = 1;
+const BOMB = 2;
 let score = 0;
 let frame = 0;
 // let frame = 4;
@@ -18,6 +21,9 @@ let isKeyDown = false;
 let didScore = 0;
 let lives = 3;
 // let lives = 0;
+let activeType = 0;
+let delayTime = 0;
+let canScore = false;
 
 console.log('Coin Miner 2018');
 // window.pause = true;
@@ -33,16 +39,13 @@ a.addEventListener('touchend', (event) => {
 
 
 function updateScore() {
-  // COIN
-  if (frame === 0 && isKeyDown) {
+  if (isKeyDown && canScore && activeType === COIN) {
     score += 1;
-    didScore = 3; // last for 3 frames
     // draw blue flash
     c.fillStyle = 'rgba(0, 0, 255, .8)';
     c.fillRect(0, 0, WIDTH, HEIGHT);
   }
-  // BOMB
-  else if (frame === 4 && isKeyDown) {
+  if (isKeyDown && canScore && activeType === BOMB) {
     lives -= 1;
     // draw red flash
     c.fillStyle = 'rgba(255, 0, 0, .8)';
@@ -52,6 +55,7 @@ function updateScore() {
   // reset isKeyDown every frame.
   // This give the user FRAME_RATE milliseconds to tap/click
   isKeyDown = false;
+  canScore = false;
 }
 
 function renderHeader() {
@@ -78,7 +82,8 @@ function renderScore() {
  * Renders the coin based on global frame
  */
 function renderCoin() {
-  if (frame < 4) { return; }
+  if (activeType !== COIN) { return; }
+  if (frame < delayTime) { return; }
   let x = 150;
   let y = 160;
   const radius = 40;
@@ -90,7 +95,17 @@ function renderCoin() {
     140, 215 + 100, 9,
   ];
 
-  let index = (frame - 4) * 3;
+  // let index = (delayTime - frame) > frames.length ? frames.length : (delayTime - frame);
+  let index = frame - delayTime;
+
+  // can score on the last frame
+  if (index === (frames.length/3)) {
+    canScore = true;
+  }
+
+  if (index > (frames.length/3)-1) { return; }
+  // console.log('index', index, 'delayTime', delayTime, 'frame', frame, 'length', frames.length);
+  index *= 3;
   drawCoin(frames[index], frames[index+1], frames[index+2]);
 }
 
@@ -101,6 +116,8 @@ function drawCoin(x, y, scale) {
 }
 
 function renderBomb() {
+  if (activeType !== BOMB) { return; }
+  if (frame < delayTime) { return; }
   const frames = [
   //  x,   y, scale
     155, 215, 1,
@@ -108,9 +125,18 @@ function renderBomb() {
     150, 215 + 50, 4,
     140, 215 + 100, 9,
   ];
-  if (frame >= frames.length) { return; }
 
-  const index = frame * 3;
+  // let index = frame > frames.length ? frames.length : frame;
+  let index = frame - delayTime;
+
+  // can score on the last frame
+  if (index === (frames.length/3)-1) {
+    canScore = true;
+  }
+
+  if (index > (frames.length/3)) { return; }
+  // console.log('index', index, 'delayTime', delayTime, 'frame', frame, 'length', frames.length);
+  index *= 3;
   drawBomb(frames[index], frames[index+1], frames[index+2]);
 }
 
@@ -167,6 +193,8 @@ function renderTrack() {
   });
 
   // Draw each rectangle
+  c.strokeStyle = '#392b1b';
+  c.fillStyle = '#392b1b';
   c.beginPath();
   points.forEach((offset) => {
     c.moveTo(x1 - offset[0], y + offset[1]);
@@ -191,30 +219,42 @@ function tick(timestamp = 0) {
   // console.log('tick', diff);
 
   if (diff >= FRAME_RATE) {
+    console.log('%cframe', 'color: #ddd;', frame, 'activeType', activeType);
     lastTimestamp = timestamp;
+
     clearScreen();
-    // c.drawImage(elRefrence, -159, -60);
     renderCave();
-
-    c.strokeStyle = '#392b1b';
-    c.fillStyle = '#392b1b';
-
-    updateScore();
     renderTrack();
+    updateScore();
     renderHeader();
 
     if (lives <= 0) {
       c.fillText(`Game Over`, WIDTH/2 - 70, HEIGHT/2 - 25);
     }
     else {
-      renderCoin();
-      renderBomb();
+      // activeType is BOMB or Coin
+      if (activeType) {
+        renderCoin();
+        renderBomb();
+      }
+      else if (Math.random() > .5) {
+        activeType = COIN;
+        delayTime = 0|Math.random()*3;
+        console.log('set activeType = COIN', activeType, delayTime);
+      }
+      else {
+        activeType = BOMB;
+        delayTime = 0|Math.random()*3;
+        console.log('set activeType = BOMB', activeType, delayTime);
+      }
     }
+
 
     // Update the animation Frame
     frame += 1;
     if (frame === FRAME_LENGTH) {
       frame = 0;
+      activeType = NONE;
     }
   }
 
