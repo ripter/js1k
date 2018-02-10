@@ -12,16 +12,13 @@ const FRAME_LENGTH = 8;
 const FRAME_RATE = 250;
 let score = 0;
 let frame = 0;
-// let frame = 4;
+// let frame = 3;
 let lastTimestamp = -FRAME_RATE;
 let isKeyDown = false;
 let didScore = 0;
-let lives = 3;
-// let lives = 0;
-
 console.log('Coin Miner 2018');
-// window.pause = true;
 
+// window.pause = true;
 a.addEventListener('click', (event) => {
   console.log(event);
   isKeyDown = true;
@@ -31,22 +28,25 @@ a.addEventListener('touchend', (event) => {
   isKeyDown = true;
 });
 
-
 function updateScore() {
-  // COIN
+  // reset in two frames
+  if (didScore > 0) {
+    didScore -= 1;
+  }
+  else if (didScore < 0) {
+    didScore += 1;
+  }
+
+  //TODO: real score handling
   if (frame === 0 && isKeyDown) {
+    // console.log('Score!')
     score += 1;
     didScore = 3; // last for 3 frames
-    // draw blue flash
-    c.fillStyle = 'rgba(0, 0, 255, .8)';
-    c.fillRect(0, 0, WIDTH, HEIGHT);
   }
-  // BOMB
   else if (frame === 4 && isKeyDown) {
-    lives -= 1;
-    // draw red flash
-    c.fillStyle = 'rgba(255, 0, 0, .8)';
-    c.fillRect(0, 0, WIDTH, HEIGHT);
+    // console.log('Score!')
+    score -= 1;
+    didScore = -3; // last for 3 frames
   }
 
   // reset isKeyDown every frame.
@@ -54,24 +54,20 @@ function updateScore() {
   isKeyDown = false;
 }
 
-function renderHeader() {
-  c.font = '24px monospace';
-  c.fillStyle = '#f0f0b5';
-  let lifeText = '';
-
-  for(var i=0; i < lives; i++) {
-    lifeText += '💣';
-  }
-
-  c.fillText(`💎 ${score}`, 10, 30);
-  c.fillText(lifeText, WIDTH-90, 30);
-}
 
 function renderScore() {
   c.font = '24px monospace';
   c.fillStyle = '#f0f0b5';
 
-  c.fillText(`Coins: ${score}`, 10, 24);
+  if (didScore > 0) {
+    c.fillText(`*** Collected  1¢ ***`, 3, 24);
+  }
+  else if (didScore < 0) {
+    c.fillText(`*** Ouch! Lost 1¢ ***`, 3, 24);
+  }
+  else {
+    c.fillText(`Coins: ${score}`, 10, 24);
+  }
 }
 
 /**
@@ -84,10 +80,10 @@ function renderCoin() {
   const radius = 40;
   const frames = [
   //  x,   y, scale
-    155, 215, 1,
-    155, 215 + 20, 2,
-    150, 215 + 50, 4,
-    140, 215 + 100, 9,
+    157, 210, 1,
+    157, 210 + 35, 2,
+    157, 210 + 70, 4,
+    157, 210 + 60, 7,
   ];
 
   let index = (frame - 4) * 3;
@@ -105,7 +101,7 @@ function renderBomb() {
   //  x,   y, scale
     155, 215, 1,
     155, 215 + 20, 2,
-    150, 215 + 50, 4,
+    155, 215 + 50, 4,
     140, 215 + 100, 9,
   ];
   if (frame >= frames.length) { return; }
@@ -201,15 +197,11 @@ function tick(timestamp = 0) {
 
     updateScore();
     renderTrack();
-    renderHeader();
 
-    if (lives <= 0) {
-      c.fillText(`Game Over`, WIDTH/2 - 70, HEIGHT/2 - 25);
-    }
-    else {
-      renderCoin();
-      renderBomb();
-    }
+    renderCoin();
+    renderBomb();
+
+    renderScore();
 
     // Update the animation Frame
     frame += 1;
@@ -219,7 +211,7 @@ function tick(timestamp = 0) {
   }
 
   // allow pausing for debugging.
-  if (lives > 0 && !window.pause){
+  if (!window.pause){
     window.requestAnimationFrame(tick);
   }
 };

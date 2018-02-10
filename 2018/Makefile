@@ -7,6 +7,8 @@ server:
 
 uglify:
 	npx uglify-es index.js --screw-ie8 --mangle toplevel --compress collapse_vars,pure_getters  > code_uglify.js
+	stat -f%z ./code_uglify.js
 
 minify:
 	npx babel-minify index.js --mangle --evaluate -o code_minify.js
+	stat -f%z ./code_minify.js
