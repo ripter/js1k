@@ -127,7 +127,7 @@ function tick(timestamp = 0) {
 
     //
     // render the score/lives
-    c.font = '24px monospace';
+    c.font = '24px serif';
     c.fillStyle = '#f0f0b5'; // light sand color
     c.fillText(`${COIN} ${score}`, 10, 30);
     c.fillText(BOMB.repeat(lives), WIDTH-90, 30);
