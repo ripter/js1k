@@ -207,21 +207,3 @@ function tick(timestamp = 0) {
 
 // Start Game
 tick();
-
-
-// Use Space key to go to next frame
-// window.addEventListener('keydown', (event) => {
-//   console.log(event);
-//   if (event.code === 'Space') {
-//     if (event.shiftKey) {
-//       frame -= 2;
-//
-//       if (frame < 0) {
-//         frame = FRAME_LENGTH;
-//       }
-//     }
-//
-//     console.log('skipping to frame', frame);
-//     requestAnimationFrame(tick);
-//   }
-// });

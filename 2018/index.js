@@ -53,10 +53,6 @@ const FRAMES = [
   [ 45, 140, 55, 175,   55, 155 ], // frame 10
 ];
 
-
-// create shorter names for common methods
-'fillRect,fillText,beginPath,moveTo,lineTo,strokeRect'.split(',').forEach((method) => c[method.replace(/(f|b|m|l|s).+(R|P|T).+/, '$1$2')]=c[method]);
-
 // console.log('Coin Miner 2018');
 
 ['click', 'touchend'].forEach((eventName) => {
@@ -71,12 +67,12 @@ const FRAMES = [
 function drawPlank(points) {
   const x1 = VPOINT.X - WIDTH_FLOOR; // top,left
   const x2 = VPOINT.X + WIDTH_FLOOR; // top,right
-  c.bP();
-  c.mT(x1 - points[RECT_TOP], VPOINT.Y + points[RECT_LEFT]); // move to top, left corner
-  c.lT(x2 + points[RECT_TOP], VPOINT.Y + points[RECT_LEFT]); // draw line to top, right corner
-  c.lT(x2 + points[RECT_BOTTOM], VPOINT.Y + points[RECT_RIGHT]); // draw line to bottom, right corner
-  c.lT(x1 - points[RECT_BOTTOM], VPOINT.Y + points[RECT_RIGHT]); // draw line to bottom, left corner
-  c.lT(x1 - points[RECT_TOP], VPOINT.Y + points[RECT_LEFT]); // draw line to top, left corner
+  c.beginPath();
+  c.moveTo(x1 - points[RECT_TOP], VPOINT.Y + points[RECT_LEFT]); // move to top, left corner
+  c.lineTo(x2 + points[RECT_TOP], VPOINT.Y + points[RECT_LEFT]); // draw line to top, right corner
+  c.lineTo(x2 + points[RECT_BOTTOM], VPOINT.Y + points[RECT_RIGHT]); // draw line to bottom, right corner
+  c.lineTo(x1 - points[RECT_BOTTOM], VPOINT.Y + points[RECT_RIGHT]); // draw line to bottom, left corner
+  c.lineTo(x1 - points[RECT_TOP], VPOINT.Y + points[RECT_LEFT]); // draw line to top, left corner
   c.fill();
   c.stroke();
 }
@@ -102,12 +98,12 @@ function tick(timestamp = 0) {
     //
     // draw "dirt" over the entire screen to clear it.
     c.fillStyle = '#725636'; // brown dirt
-    c.fR(0, 0, WIDTH, HEIGHT);
+    c.fillRect(0, 0, WIDTH, HEIGHT);
 
     //
     // cut out a hole for the cave and path from the dirt.
     c.fillStyle = '#000';
-    c.bP();
+    c.beginPath();
     c.arc(WIDTH/2, HEIGHT/2, WIDTH/2, 0, 1 * Math.PI, true);
     c.rect(0, HEIGHT/2, WIDTH, HEIGHT/2);
     c.fill();
@@ -125,7 +121,7 @@ function tick(timestamp = 0) {
         lives -= 1;
         c.fillStyle = 'rgba(255, 0, 0, .8)'; // Red Fail Flash
       }
-      c.fR(0, 0, WIDTH, HEIGHT);
+      c.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
 
@@ -133,12 +129,12 @@ function tick(timestamp = 0) {
     // render the score/lives
     c.font = '24px monospace';
     c.fillStyle = '#f0f0b5'; // light sand color
-    c.fT(COIN+' '+score, 10, 30);
-    c.fT(BOMB.repeat(lives), WIDTH-90, 30);
+    c.fillText(`${COIN} ${score}`, 10, 30);
+    c.fillText(BOMB.repeat(lives), WIDTH-90, 30);
 
     // Draw game over
     if (lives <= 0) {
-      c.fT(`Game Over`, WIDTH/2 - 70, HEIGHT/2 - 25);
+      c.fillText(`Game Over`, WIDTH/2 - 70, HEIGHT/2 - 25);
       currentItem = NONE;
     }
 
@@ -173,7 +169,7 @@ function tick(timestamp = 0) {
     // Draw the item (Coin/Bomb)
     if (currentItem !== NONE) {
       c.font = `${12*frame}px serif`;
-      c.fT(
+      c.fillText(
         currentItem,
         VPOINT.X - points[ITEM_X],
         VPOINT.Y + points[ITEM_Y]);
@@ -186,7 +182,7 @@ function tick(timestamp = 0) {
     // That tells the user where the item needs to be in order to collect it.
     c.strokeStyle = 'rgba(255, 255, 255, .75)';
     c.lineWidth = 10;
-    c.sR(
+    c.strokeRect(
       VPOINT.X - 62,
       VPOINT.Y + 10,
       WIDTH_FLOOR*4,  // width
@@ -211,21 +207,3 @@ function tick(timestamp = 0) {
 
 // Start Game
 tick();
-
-
-// Use Space key to go to next frame
-// window.addEventListener('keydown', (event) => {
-//   console.log(event);
-//   if (event.code === 'Space') {
-//     if (event.shiftKey) {
-//       frame -= 2;
-//
-//       if (frame < 0) {
-//         frame = FRAME_LENGTH;
-//       }
-//     }
-//
-//     console.log('skipping to frame', frame);
-//     requestAnimationFrame(tick);
-//   }
-// });
