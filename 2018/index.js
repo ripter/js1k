@@ -53,7 +53,7 @@ const FRAMES = [
   [ 45, 140, 55, 175,   55, 155 ], // frame 10
 ];
 
-console.log('Coin Miner 2018');
+// console.log('Coin Miner 2018');
 
 ['click', 'touchend'].forEach((eventName) => {
   b.addEventListener(eventName, (event) => {
@@ -105,7 +105,7 @@ function tick(timestamp = 0) {
   // console.log('tick', diff);
 
   if (diff >= FRAME_RATE) {
-    console.log('%cframe', 'color: #ddd;', frame);
+    // console.log('%cframe', 'color: #ddd;', frame);
     lastTimestamp = timestamp;
 
 
@@ -219,18 +219,18 @@ tick();
 
 
 // Use Space key to go to next frame
-window.addEventListener('keydown', (event) => {
-  console.log(event);
-  if (event.code === 'Space') {
-    if (event.shiftKey) {
-      frame -= 2;
-
-      if (frame < 0) {
-        frame = FRAME_LENGTH;
-      }
-    }
-
-    console.log('skipping to frame', frame);
-    requestAnimationFrame(tick);
-  }
-});
+// window.addEventListener('keydown', (event) => {
+//   console.log(event);
+//   if (event.code === 'Space') {
+//     if (event.shiftKey) {
+//       frame -= 2;
+//
+//       if (frame < 0) {
+//         frame = FRAME_LENGTH;
+//       }
+//     }
+//
+//     console.log('skipping to frame', frame);
+//     requestAnimationFrame(tick);
+//   }
+// });
