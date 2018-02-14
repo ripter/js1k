@@ -44,13 +44,11 @@ var score = 0; // player score
 var frame = 0; // current frame1
 
 
-// console.log('Coin Miner 2018');
-['click', 'touchend'].forEach((eventName) => {
-  b.addEventListener(eventName, (event) => {
-    if ( frame >= 8 ) {
-      isKeyDown = true;
-    }
-  });
+b.addEventListener('click', (event) => {
+  // Wait until the item is in the score box to register a click.
+  if ( frame >= 8 ) {
+    isKeyDown = true;
+  }
 });
 
 /**
@@ -160,6 +158,6 @@ void function tick(timestamp) {
   }
 
   if (lives > 0){
-    window.requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
   }
 }(0);
