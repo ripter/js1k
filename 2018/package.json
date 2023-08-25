@@ -9,7 +9,7 @@
   "author": "chris richards",
   "license": "ISC",
   "dependencies": {
-    "eslint": "^4.17.0",
+    "eslint": "^8.47.0",
     "regpack": "^5.0.1",
     "uglify-es": "^3.3.10"
   }
